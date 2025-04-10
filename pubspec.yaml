@@ -72,6 +72,7 @@ flutter:
       # - assets\icons\Notification_selected.png
       - assets\icons\Profile_selected.png
       - assets\icons\Search_selected.png
+      - assets\icons\Search_dark.png
       - assets\icons\Hover_button.png
       - assets\icons\Sun.png
       - assets\icons\Cart.png
