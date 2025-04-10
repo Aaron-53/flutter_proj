@@ -22,10 +22,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(fontFamily: 'SofiaPro'),
       home: Scaffold(
         extendBody: true,
+        backgroundColor: const Color(0xFFFFFFFF),
         extendBodyBehindAppBar: true,
         body: SafeArea(bottom: false, child: HomeScreen()),
         bottomNavigationBar: CustomBottomNavBar(),
         floatingActionButton: FloatingActionButton(
+          elevation: 0,
           onPressed: () {},
           shape: ShapeBorder.lerp(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),

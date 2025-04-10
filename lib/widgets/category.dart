@@ -23,17 +23,24 @@ class Categories extends StatelessWidget {
         itemBuilder: (context, index) {
           final isSelected = index == selectedIndex;
           return Container(
+            alignment: Alignment.center,
             margin: const EdgeInsets.symmetric(horizontal: 4),
             child: TextButton(
               onPressed: () => onCategorySelected(index),
               style: TextButton.styleFrom(
-                backgroundColor: isSelected ? const Color(0xFF70B9BE) : const Color(0xFFF1F5F5),
-                foregroundColor: isSelected ? Colors.white : const Color(0xFF0A2533),
+                backgroundColor:
+                    isSelected
+                        ? const Color(0xFF70B9BE)
+                        : const Color(0xFFF1F5F5),
+                foregroundColor:
+                    isSelected ? Colors.white : const Color(0xFF0A2533),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: Text(categories[index]),
+              child: Center(
+                child: Text(categories[index], style: TextStyle(fontSize: 16)),
+              ),
             ),
           );
         },

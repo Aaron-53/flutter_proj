@@ -15,7 +15,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedCategoryIndex = 0;
 
-  // Method to handle category selection
   void _onCategorySelected(int index) {
     setState(() {
       _selectedCategoryIndex = index;
@@ -24,20 +23,31 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildGreetingBox(context),
-          const SizedBox(height: 20),
-          _buildFeaturedSection(context),
-          const SizedBox(height: 20),
-          _buildCategoriesSection(context),
-          const SizedBox(height: 20),
-          _buildPopularRecipesSection(context),
-          const SizedBox(height: 20),
-        ],
-      ),
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: _buildGreetingBox(context),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.only(top: 20),
+          sliver: SliverToBoxAdapter(
+            child: _buildFeaturedSection(context),
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.only(top: 20),
+          sliver: SliverToBoxAdapter(
+            child: _buildCategoriesSection(context),
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.only(top: 20),
+          sliver: _buildPopularRecipesSection(context),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.only(bottom: 70),
+        ),
+      ],
     );
   }
 
@@ -52,35 +62,26 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // This is already correct
-                mainAxisAlignment:
-                    MainAxisAlignment
-                        .start, // Add this to ensure proper alignment
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image.asset(
                     "assets/icons/Sun.png",
-                    width:
-                        28, // Increase from default size (assuming original is smaller)
-                    height: 28, // Keep aspect ratio consistent
-                    fit: BoxFit.contain, // Ensures the image fits properly
+                    width: 28,
+                    height: 28,
+                    fit: BoxFit.contain,
                   ),
-                  const SizedBox(
-                    width: 4,
-                  ), // Increase spacing between icon and text (from 5 to 10)
+                  const SizedBox(width: 4),
                   Text(
                     'Good Morning,',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontSize: 20, // Increase text size (adjust as needed)
-                      fontWeight:
-                          FontWeight
-                              .w400, // Optional: adjust weight for better visibility
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
                       color: const Color(0xFF0A2533),
                     ),
                   ),
                 ],
               ),
-
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -89,7 +90,7 @@ class _HomeState extends State<Home> {
                     widget.username,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: 24, // Increase text size (adjust as needed)
+                      fontSize: 24,
                       color: const Color(0xFF0A2533),
                     ),
                   ),
@@ -103,9 +104,8 @@ class _HomeState extends State<Home> {
             child: IconButton(
               icon: Image.asset(
                 "assets/icons/Cart.png",
-                width:
-                    28, // Increase from default size (assuming original is smaller)
-                height: 28, // Keep aspect ratio consistent
+                width: 28,
+                height: 28,
                 fit: BoxFit.contain,
               ),
               onPressed: () {
@@ -119,7 +119,6 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildFeaturedSection(BuildContext context) {
-    // Sample data for featured recipes
     final List<Map<String, String>> featuredRecipes = [
       {
         'imagePath': 'assets\\img\\featured_bg1.png',
@@ -144,9 +143,7 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Featured',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 10),
@@ -190,9 +187,7 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Category',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 10),
@@ -206,7 +201,6 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildPopularRecipesSection(BuildContext context) {
-    // Sample data for popular recipes
     final List<Map<String, String>> popularRecipes = [
       {
         'imagePath': 'assets\\img\\popular1.png',
@@ -240,46 +234,40 @@ class _HomeState extends State<Home> {
       },
     ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Popular Recipes',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+    return SliverToBoxAdapter(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'Popular Recipes',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          
-          height: 300,
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            scrollDirection: Axis.horizontal,
-            itemCount: popularRecipes.length,
-            itemBuilder: (context, index) {
-              final recipe = popularRecipes[index];
-              return ItemCard(
-                imagePath: recipe['imagePath']!,
-                title: recipe['title']!,
-                calories: recipe['calories']!,
-                time: recipe['time']!,
-                onTap: () {
-                  // Handle item tap
-                  print('Tapped on ${recipe['title']}');
-                },
-              );
-            },
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 332,
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              scrollDirection: Axis.horizontal,
+              itemCount: popularRecipes.length,
+              itemBuilder: (context, index) {
+                final recipe = popularRecipes[index];
+                return ItemCard(
+                  imagePath: recipe['imagePath']!,
+                  title: recipe['title']!,
+                  calories: recipe['calories']!,
+                  time: recipe['time']!,
+                  onTap: () {
+                    print('Tapped on ${recipe['title']}');
+                  },
+                );
+              },
+            ),
           ),
-        ),
-        SizedBox(
-          height: 70,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

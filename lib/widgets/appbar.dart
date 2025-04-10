@@ -2,7 +2,6 @@ import 'package:first_proj/provider/selectedindexprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class CustomBottomNavBar extends StatelessWidget {
   CustomBottomNavBar({super.key});
 
@@ -18,7 +17,7 @@ class CustomBottomNavBar extends StatelessWidget {
   final List<String> _selectedIcons = [
     'assets/icons/Home_selected.png',
     'assets/icons/Search_selected.png',
-    'assets/icons/Notification_selected.png',
+    'assets/icons/Notification.png',
     'assets/icons/Profile_selected.png',
   ];
 
@@ -26,27 +25,48 @@ class CustomBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SelectedIndexProvider>(
       builder: (context, provider, child) {
-        return BottomAppBar(
-          notchMargin: 10.0,
-          shape: CircularNotchedRectangle(),
-          color: Colors.white,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [_buildIconButton(context, 0), _buildIconButton(context, 1)],
-                ),
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            child: BottomAppBar(
+              notchMargin: 10.0,
+              shape: CircularNotchedRectangle(),
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildIconButton(context, 0),
+                        _buildIconButton(context, 1),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 80),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildIconButton(context, 2),
+                        _buildIconButton(context, 3),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(width: 80),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [_buildIconButton(context, 2), _buildIconButton(context, 3)],
-                ),
-              ),
-            ],
+            ),
           ),
         );
       },

@@ -27,15 +27,16 @@ class _ItemCardState extends State<ItemCard> {
   Widget build(BuildContext context) {
     return Container(
       width: 220,
-      margin: const EdgeInsets.symmetric(horizontal: 4),
+      height: 260,
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 4,
+            color: Color(0xFF063336).withValues(alpha: 0.1),
+            spreadRadius: 0,
+            blurRadius: 16,
             offset: const Offset(0, 2),
           ),
         ],
