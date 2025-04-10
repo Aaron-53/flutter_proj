@@ -1,10 +1,25 @@
+import 'package:first_proj/widgets/category.dart';
 import 'package:first_proj/widgets/featuredbox.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final String username;
 
   const Home({super.key, required this.username});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  int _selectedCategoryIndex = 0;
+
+  // Method to handle category selection
+  void _onCategorySelected(int index) {
+    setState(() {
+      _selectedCategoryIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +85,7 @@ class Home extends StatelessWidget {
                 children: [
                   const SizedBox(width: 10),
                   Text(
-                    username,
+                    widget.username,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 24, // Increase text size (adjust as needed)
@@ -110,14 +125,14 @@ class Home extends StatelessWidget {
         'title': 'Asian white noodle with extra seafood',
         'authorImage': 'assets\\people\\featured1.png',
         'authorName': 'James Spader',
-        'time': '20 min',
+        'time': '20 Min',
       },
       {
         'imagePath': 'assets\\img\\featured_bg2.png',
         'title': 'Healthy Taco Salad with fresh vegetable',
         'authorImage': 'assets\\people\\featured2.png',
         'authorName': 'Olivia Rizka',
-        'time': '12 min',
+        'time': '12 Min',
       },
     ];
 
@@ -173,37 +188,17 @@ class Home extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'Categories',
+            'Category',
             style: Theme.of(
               context,
             ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 10),
-        SizedBox(
-          height: 44,
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            scrollDirection: Axis.horizontal,
-            itemCount: categories.length,
-            itemBuilder: (context, index) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        index == 0 ? Colors.transparent : Colors.grey.shade200,
-                    foregroundColor: index == 0 ? Colors.white : Colors.black87,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Text(categories[index]),
-                ),
-              );
-            },
-          ),
+        Categories(
+          categories: categories,
+          selectedIndex: _selectedCategoryIndex,
+          onCategorySelected: _onCategorySelected,
         ),
       ],
     );

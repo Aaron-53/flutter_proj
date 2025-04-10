@@ -52,7 +52,7 @@ class FeaturedBox extends StatelessWidget {
                 CircleAvatar(
                   backgroundColor:
                       Colors.white, // This creates the white border
-                  radius: 14, // Slightly larger than the inner avatar
+                  radius: 13, // Slightly larger than the inner avatar
                   child: CircleAvatar(
                     backgroundImage: AssetImage(authorImage),
                     radius: 12,
@@ -62,8 +62,12 @@ class FeaturedBox extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   authorName,
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.75),
+                    fontSize: 14,
+                  ),
                 ),
+
                 const Spacer(),
                 Row(
                   children: [
@@ -75,7 +79,7 @@ class FeaturedBox extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       time,
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.75), fontSize: 14),
                     ),
                   ],
                 ),
