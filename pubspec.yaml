@@ -77,6 +77,11 @@ flutter:
       - assets\icons\Cart.png
       - assets\people\featured1.png
       - assets\people\featured2.png
+      - assets\icons\heart_liked.png
+      - assets\icons\heart.png
+      - assets\icons\fire.png
+      - assets\img\popular1.png
+      - assets\img\popular2.png
 
 
 

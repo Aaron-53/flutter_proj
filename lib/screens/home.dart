@@ -1,5 +1,6 @@
 import 'package:first_proj/widgets/category.dart';
 import 'package:first_proj/widgets/featuredbox.dart';
+import 'package:first_proj/widgets/itemcard.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -205,8 +206,43 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildPopularRecipesSection(BuildContext context) {
+    // Sample data for popular recipes
+    final List<Map<String, String>> popularRecipes = [
+      {
+        'imagePath': 'assets\\img\\popular1.png',
+        'title': 'Healthy Taco Salad with fresh vegetable',
+        'calories': '320 kcal',
+        'time': '20Min',
+      },
+      {
+        'imagePath': 'assets\\img\\popular2.png',
+        'title': 'Healthy Taco Salad with fresh vegetable',
+        'calories': '280 kcal',
+        'time': '12 Min',
+      },
+      {
+        'imagePath': 'assets\\img\\popular1.png',
+        'title': 'Grilled Salmon with Vegetables',
+        'calories': '420 kcal',
+        'time': '25 min',
+      },
+      {
+        'imagePath': 'assets\\img\\popular2.png',
+        'title': 'Avocado Toast with Eggs',
+        'calories': '210 kcal',
+        'time': '10 min',
+      },
+      {
+        'imagePath': 'assets\\img\\popular1.png',
+        'title': 'Berry Smoothie Bowl',
+        'calories': '180 kcal',
+        'time': '5 min',
+      },
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -219,99 +255,29 @@ class _HomeState extends State<Home> {
         ),
         const SizedBox(height: 10),
         SizedBox(
-          height: 220,
+          
+          height: 300,
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             scrollDirection: Axis.horizontal,
-            itemCount: 5,
+            itemCount: popularRecipes.length,
             itemBuilder: (context, index) {
-              return Container(
-                width: 160,
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(12),
-                          ),
-                          image: DecorationImage(
-                            image: AssetImage(
-                              'assets/images/popular_${index + 1}.jpg',
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Popular Recipe ${index + 1}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.access_time,
-                                  size: 14,
-                                  color: Colors.grey,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '${15 + index * 5} min',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.star,
-                                  size: 14,
-                                  color: Colors.amber,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '${4 + (index % 2) * 0.5}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              final recipe = popularRecipes[index];
+              return ItemCard(
+                imagePath: recipe['imagePath']!,
+                title: recipe['title']!,
+                calories: recipe['calories']!,
+                time: recipe['time']!,
+                onTap: () {
+                  // Handle item tap
+                  print('Tapped on ${recipe['title']}');
+                },
               );
             },
           ),
+        ),
+        SizedBox(
+          height: 70,
         ),
       ],
     );
