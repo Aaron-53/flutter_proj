@@ -4,9 +4,11 @@ import '../services/api_service.dart';
 
 class ProductProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
-  
+
   List<Product> _products = [];
   List<String> _categories = [];
+  // Simple list to store liked product IDs
+  List<int> _likedProductIds = [];
   Product _product = Product(
     id: 0,
     title: '',
@@ -14,23 +16,38 @@ class ProductProvider extends ChangeNotifier {
     description: '',
     category: '',
     image: '',
-);
+    liked: false,
+  );
   bool _isLoading = false;
   String _error = '';
-  
+
   List<Product> get products => _products;
   List<String> get categories => _categories;
   Product get product => _product;
   bool get isLoading => _isLoading;
   String get error => _error;
-  
+
   Future<void> fetchProducts() async {
     _isLoading = true;
     _error = '';
     notifyListeners();
-    
+
     try {
       _products = await _apiService.getProducts();
+      
+      // Update liked status based on our stored IDs
+      for (var i = 0; i < _products.length; i++) {
+        _products[i] = Product(
+          id: _products[i].id,
+          title: _products[i].title,
+          price: _products[i].price,
+          description: _products[i].description,
+          category: _products[i].category,
+          image: _products[i].image,
+          liked: _likedProductIds.contains(_products[i].id),
+        );
+      }
+      
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -39,17 +56,29 @@ class ProductProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-  
+
   Future<Product?> fetchProductById(int id) async {
     _isLoading = true;
     _error = '';
     notifyListeners();
-    
+
     try {
       _product = await _apiService.getProduct(id);
+      
+      // Update liked status for this product
+      _product = Product(
+        id: _product.id,
+        title: _product.title,
+        price: _product.price,
+        description: _product.description,
+        category: _product.category,
+        image: _product.image,
+        liked: _likedProductIds.contains(_product.id),
+      );
+      
       _isLoading = false;
       notifyListeners();
-      return product;
+      return _product;
     } catch (e) {
       _isLoading = false;
       _error = e.toString();
@@ -57,14 +86,28 @@ class ProductProvider extends ChangeNotifier {
       return null;
     }
   }
-  
+
   Future<void> fetchProductsByCategory(String category) async {
     _isLoading = true;
     _error = '';
     notifyListeners();
-    
+
     try {
       _products = await _apiService.getProductsByCategory(category);
+      
+      // Update liked status based on our stored IDs
+      for (var i = 0; i < _products.length; i++) {
+        _products[i] = Product(
+          id: _products[i].id,
+          title: _products[i].title,
+          price: _products[i].price,
+          description: _products[i].description,
+          category: _products[i].category,
+          image: _products[i].image,
+          liked: _likedProductIds.contains(_products[i].id),
+        );
+      }
+      
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -73,14 +116,14 @@ class ProductProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-  
+
   Future<void> fetchCategories() async {
     if (_categories.isNotEmpty) return; // Don't fetch if already loaded
-    
+
     _isLoading = true;
     _error = '';
     notifyListeners();
-    
+
     try {
       _categories = await _apiService.getCategories();
       // Add 'All' category at the beginning
@@ -94,5 +137,50 @@ class ProductProvider extends ChangeNotifier {
       _error = e.toString();
       notifyListeners();
     }
+  }
+
+  void toggleProductLike(int productId) {
+    // Toggle in the liked IDs list
+    if (_likedProductIds.contains(productId)) {
+      _likedProductIds.remove(productId);
+    } else {
+      _likedProductIds.add(productId);
+    }
+    
+    // Update product in the list
+    final index = _products.indexWhere((p) => p.id == productId);
+    if (index != -1) {
+      final isLiked = _likedProductIds.contains(productId);
+      _products[index] = Product(
+        id: _products[index].id,
+        title: _products[index].title,
+        price: _products[index].price,
+        description: _products[index].description,
+        category: _products[index].category,
+        image: _products[index].image,
+        liked: isLiked,
+      );
+    }
+
+    // Update current product if needed
+    if (_product.id == productId) {
+      final isLiked = _likedProductIds.contains(productId);
+      _product = Product(
+        id: _product.id,
+        title: _product.title,
+        price: _product.price,
+        description: _product.description,
+        category: _product.category,
+        image: _product.image,
+        liked: isLiked,
+      );
+    }
+    
+    notifyListeners();
+  }
+  
+  // Get all liked products
+  List<Product> getLikedProducts() {
+    return _products.where((product) => _likedProductIds.contains(product.id)).toList();
   }
 }

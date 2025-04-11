@@ -1,6 +1,4 @@
-import 'package:first_proj/main.dart';
 import 'package:first_proj/providers/product_provider.dart';
-import 'package:first_proj/screens/item.dart';
 import 'package:first_proj/widgets/category.dart';
 import 'package:first_proj/widgets/featuredbox.dart';
 import 'package:first_proj/widgets/itemcard.dart';
@@ -29,7 +27,6 @@ class _HomeState extends State<Home> {
         context,
         listen: false,
       );
-      productProvider.fetchProducts();
       productProvider.fetchCategories();
     });
   }
@@ -296,6 +293,8 @@ class _HomeState extends State<Home> {
                       calories: '${product.price.toStringAsFixed(2)}',
                       time: product.category,
                       id: product.id,
+                      liked: product.liked,
+                      toggleLiked: productProvider.toggleProductLike,
                     );
                   },
                 ),

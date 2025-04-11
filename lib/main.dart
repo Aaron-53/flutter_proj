@@ -1,7 +1,6 @@
 import 'package:first_proj/providers/product_provider.dart';
 import 'package:first_proj/providers/selectedindexprovider.dart';
 import 'package:first_proj/screens/home.dart';
-import 'package:first_proj/screens/item.dart';
 import 'package:first_proj/screens/login.dart';
 import 'package:first_proj/screens/profile.dart';
 import 'package:first_proj/screens/search.dart';

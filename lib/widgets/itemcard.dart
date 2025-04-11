@@ -7,6 +7,8 @@ class ItemCard extends StatefulWidget {
   final String calories;
   final String time;
   final int id;
+  final bool liked;
+  final Function toggleLiked;
 
   const ItemCard({
     super.key,
@@ -15,6 +17,8 @@ class ItemCard extends StatefulWidget {
     required this.calories,
     required this.time,
     required this.id,
+    required this.liked,
+    required this.toggleLiked,
   });
 
   @override
@@ -22,10 +26,6 @@ class ItemCard extends StatefulWidget {
 }
 
 class _ItemCardState extends State<ItemCard> {
-  bool _isLiked = false;
-
-
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -86,13 +86,11 @@ class _ItemCardState extends State<ItemCard> {
                     right: 12,
                     child: GestureDetector(
                       onTap: () {
-                        setState(() {
-                          _isLiked = !_isLiked;
-                        });
+                        widget.toggleLiked(widget.id);
                       },
                       child: Container(
                         child:
-                            _isLiked
+                            widget.liked
                                 ? Image.asset(
                                   "assets/icons/heart_liked.png",
                                   height: 70,

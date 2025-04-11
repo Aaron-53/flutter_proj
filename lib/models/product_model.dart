@@ -5,6 +5,7 @@ class Product {
   final String description;
   final String category;
   final String image;
+  bool liked; // Added this property
   
   Product({
     required this.id,
@@ -13,6 +14,7 @@ class Product {
     required this.description,
     required this.category,
     required this.image,
+    this.liked = false, // Default value is false
   });
   
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class Product {
       description: json['description'],
       category: json['category'],
       image: json['image'],
+      liked: json['liked'] ?? false, // Parse from JSON if available, otherwise default to false
     );
   }
   
@@ -34,6 +37,7 @@ class Product {
       'description': description,
       'category': category,
       'image': image,
+      'liked': liked, // Include in JSON
     };
   }
 }

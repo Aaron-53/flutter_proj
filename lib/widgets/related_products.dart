@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
 import '../models/product_model.dart';
 import '../widgets/recipecard.dart';
-import '../screens/item.dart';
 
 class RelatedProducts extends StatefulWidget {
   final int currentProductId;

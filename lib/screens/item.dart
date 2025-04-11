@@ -3,7 +3,6 @@ import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
-import '../models/product_model.dart';
 import '../widgets/ingredients_list.dart';
 import '../widgets/related_products.dart';
 
@@ -97,7 +96,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.1),
                           spreadRadius: 1,
                           blurRadius: 10,
                           offset: Offset(0, -5),
@@ -132,12 +131,14 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           ),
         );
       },
-    ); //hii
+    );
   }
 
   // UI Component Methods
 
   PreferredSizeWidget _buildAppBar() {
+    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    final product = productProvider.product;
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -158,12 +159,21 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         IconButton(
           padding: EdgeInsets.zero,
           constraints: BoxConstraints(),
-          icon: Image.asset(
+          icon: product.liked ? Image.asset(
+            "assets/icons/heart_liked.png",
+            fit: BoxFit.cover,
+            width: 90,
+          ): Image.asset(
             "assets/icons/heart.png",
             fit: BoxFit.cover,
             width: 90,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Provider.of<ProductProvider>(
+              context,
+              listen: false,
+            ).toggleProductLike(widget.productId);
+          },
         ),
       ],
     );
@@ -183,7 +193,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 
   Widget _buildProductHeader() {
-    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    final productProvider = Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -254,7 +267,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 
   Widget _buildProductInfo() {
-    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    final productProvider = Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    );
     final nutritionItems = [
       {'icon': "assets\\icons\\Carbs.png", 'value': '55g', 'label': 'carbs'},
       {
@@ -415,7 +431,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 
   Widget _buildDetailsSection() {
-    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    final productProvider = Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    );
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -432,7 +451,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           const SizedBox(height: 12),
           _buildDetailItem('ID', productProvider.product.id.toString()),
           _buildDetailItem('Title', productProvider.product.title),
-          _buildDetailItem('Price', '\$${productProvider.product.price.toStringAsFixed(2)}'),
+          _buildDetailItem(
+            'Price',
+            '\$${productProvider.product.price.toStringAsFixed(2)}',
+          ),
           _buildDetailItem('Category', productProvider.product.category),
           _buildDetailItem('Description', productProvider.product.description),
         ],

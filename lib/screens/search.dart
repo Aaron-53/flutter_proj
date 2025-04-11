@@ -6,7 +6,6 @@ import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
-import '../screens/item.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});
