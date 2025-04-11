@@ -1,5 +1,6 @@
 import 'package:first_proj/provider/selectedindexprovider.dart';
 import 'package:first_proj/screens/home.dart';
+import 'package:first_proj/screens/profile.dart';
 import 'package:first_proj/screens/search.dart';
 import 'package:first_proj/widgets/appBar.dart';
 import 'package:flutter/material.dart';
@@ -66,8 +67,8 @@ class HomeScreen extends StatelessWidget {
          return Search();
       // case 2:
       //   return NotificationScreen();
-      // case 3:
-      //   return ProfileScreen();
+       case 3:
+         return Profile();
       default:
         return Home(username: "John Doe");
     }
