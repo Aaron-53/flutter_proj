@@ -27,6 +27,7 @@ class _HomeState extends State<Home> {
         context,
         listen: false,
       );
+      productProvider.fetchProducts();
       productProvider.fetchCategories();
     });
   }

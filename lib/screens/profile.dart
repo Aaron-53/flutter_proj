@@ -1,7 +1,24 @@
+import 'package:first_proj/models/product_model.dart';
+import 'package:first_proj/providers/product_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProductProvider>(context, listen: false).fetchProducts();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,111 +138,118 @@ class Profile extends StatelessWidget {
 class MyFavoritesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> favorites = [
-      {
-        'imagePath': 'assets/img/popular1.png',
-        'title': 'Sunny Egg & Toast Avocado',
-        'authorName': 'Alice Fala',
-        'authorImage': 'assets/people/featured1.png',
-      },
-      {
-        'imagePath': 'assets/img/popular2.png',
-        'title': 'Bowl of noodle with beef',
-        'authorName': 'James Spader',
-        'authorImage': 'assets/people/featured2.png',
-      },
-      {
-        'imagePath': 'assets/img/popular1.png',
-        'title': 'Easy homemade beef burger',
-        'authorName': 'Agnes',
-        'authorImage': 'assets/people/featured1.png',
-      },
-      {
-        'imagePath': 'assets/img/popular2.png',
-        'title': 'Half boiled egg sandwich',
-        'authorName': 'Natalia Luca',
-        'authorImage': 'assets/people/featured2.png',
-      },
-      {
-        'imagePath': 'assets/img/popular1.png',
-        'title': 'Easy homemade beef burger',
-        'authorName': 'Agnes',
-        'authorImage': 'assets/people/featured1.png',
-      },
-      {
-        'imagePath': 'assets/img/popular2.png',
-        'title': 'Half boiled egg sandwich',
-        'authorName': 'Natalia Luca',
-        'authorImage': 'assets/people/featured2.png',
-      },
-      {
-        'imagePath': 'assets/img/popular1.png',
-        'title': 'Easy homemade beef burger',
-        'authorName': 'Agnes',
-        'authorImage': 'assets/people/featured1.png',
-      },
-      {
-        'imagePath': 'assets/img/popular2.png',
-        'title': 'Half boiled egg sandwich',
-        'authorName': 'Natalia Luca',
-        'authorImage': 'assets/people/featured2.png',
-      },
-    ];
+    return Consumer<ProductProvider>(
+      builder: (context, productProvider, child) {
+        // Filter products that are liked
+        List<Product> likedProducts = productProvider.products
+            .where((product) => product.liked)
+            .toList();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'My Favorites',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+        // If no products are loaded yet or there's an error, handle it
+        if (productProvider.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (productProvider.error.isNotEmpty) {
+          return Center(child: Text('Error: ${productProvider.error}'));
+        }
+
+        // If no liked products
+        if (likedProducts.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'My Favorites',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'See All',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF70B9BE),
+                          fontSize: 18
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Text(
-                'See All',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF70B9BE),
-                  fontSize: 18
+                SizedBox(height: 20),
+                Center(
+                  child: Text(
+                    'No favorite recipes yet.',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
                 ),
+              ],
+            ),
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'My Favorites',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'See All',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF70B9BE),
+                      fontSize: 18
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
-            childAspectRatio: 3 / 4,
-          ),
-          itemCount: favorites.length,
-          itemBuilder: (context, index) {
-            final recipe = favorites[index];
-            return _buildFavoriteItem(context, recipe);
-          },
-        ),
-      ],
+            ),
+            const SizedBox(height: 10),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+                childAspectRatio: 3 / 4,
+              ),
+              itemCount: likedProducts.length,
+              itemBuilder: (context, index) {
+                final recipe = likedProducts[index];
+                return _buildFavoriteItem(context, recipe, productProvider);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildFavoriteItem(BuildContext context, Map<String, String> recipe) {
+  Widget _buildFavoriteItem(BuildContext context, Product product, ProductProvider provider) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Color(0x0633361A).withValues(alpha: 0.3),
+            color: Color(0x0633361A).withOpacity(0.3),
             blurRadius: 16,
             spreadRadius: 0,
             offset: const Offset(0, 2),
@@ -234,7 +258,7 @@ class MyFavoritesWidget extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Stack(
             children: [
@@ -244,22 +268,42 @@ class MyFavoritesWidget extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
-                  child: Image.asset(
-                    recipe['imagePath']!,
-                    height: 120,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                  child: product.image.startsWith('http')
+                      ? Image.network(
+                          product.image,
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.fill,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              height: 120,
+                              width: double.infinity,
+                              color: Colors.grey[300],
+                              child: Icon(Icons.error, color: Colors.red),
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          'assets/img/popular1.png',
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Positioned(
                 top: 14,
                 right: 14,
-                child: Image.asset(
-                  "assets/icons/heart_liked.png",
-                  height: 70,
-                  width: 70,
-                  fit: BoxFit.fill,
+                child: GestureDetector(
+                  onTap: () {
+                    provider.toggleProductLike(product.id);
+                  },
+                  child: Image.asset(
+                    "assets/icons/heart_liked.png",
+                    height: 70,
+                    width: 70,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
             ],
@@ -270,7 +314,7 @@ class MyFavoritesWidget extends StatelessWidget {
               vertical: 6,
             ),
             child: Text(
-              recipe['title']!,
+              product.title,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -286,21 +330,19 @@ class MyFavoritesWidget extends StatelessWidget {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundColor: Color(0xFF97A2B0),
+                    backgroundColor: Color(0xFF70B9BE),
                     radius: 16,
                     child: CircleAvatar(
-                      backgroundImage: AssetImage(
-                        recipe['authorImage'] ?? '',
-                      ),
+                      backgroundImage: AssetImage('assets/people/featured1.png'),
                       radius: 14,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    recipe['authorName'] ?? '',
+                    'random guy',
                     style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF97A2B0).withValues(alpha: 0.75),
+                      fontSize: 16,
+                      color: Color(0xFF97A2B0).withOpacity(0.75),
                     ),
                   ),
                 ],
