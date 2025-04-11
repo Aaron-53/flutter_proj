@@ -1,7 +1,12 @@
+import 'package:first_proj/main.dart';
+import 'package:first_proj/providers/product_provider.dart';
+import 'package:first_proj/screens/item.dart';
 import 'package:first_proj/widgets/category.dart';
 import 'package:first_proj/widgets/featuredbox.dart';
 import 'package:first_proj/widgets/itemcard.dart';
+import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   final String username;
@@ -15,38 +20,67 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedCategoryIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    // Fetch products and categories when the screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final productProvider = Provider.of<ProductProvider>(
+        context,
+        listen: false,
+      );
+      productProvider.fetchProducts();
+      productProvider.fetchCategories();
+    });
+  }
+
   void _onCategorySelected(int index) {
     setState(() {
       _selectedCategoryIndex = index;
     });
+
+    final productProvider = Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    );
+    final categories =
+        productProvider.categories.isEmpty
+            ? [
+              'All',
+              'Breakfast',
+              'Lunch',
+              'Dinner',
+              'Desserts',
+              'Snacks',
+              'Drinks',
+            ]
+            : productProvider.categories;
+
+    if (index > 0) {
+      productProvider.fetchProductsByCategory(categories[index].toLowerCase());
+    } else {
+      productProvider.fetchProducts();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
-          child: _buildGreetingBox(context),
+        SliverToBoxAdapter(child: _buildGreetingBox(context)),
+        SliverPadding(
+          padding: const EdgeInsets.only(top: 20),
+          sliver: SliverToBoxAdapter(child: _buildFeaturedSection(context)),
         ),
         SliverPadding(
           padding: const EdgeInsets.only(top: 20),
-          sliver: SliverToBoxAdapter(
-            child: _buildFeaturedSection(context),
-          ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.only(top: 20),
-          sliver: SliverToBoxAdapter(
-            child: _buildCategoriesSection(context),
-          ),
+          sliver: SliverToBoxAdapter(child: _buildCategoriesSection(context)),
         ),
         SliverPadding(
           padding: const EdgeInsets.only(top: 20),
           sliver: _buildPopularRecipesSection(context),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.only(bottom: 70),
-        ),
+        SliverPadding(padding: const EdgeInsets.only(bottom: 70)),
       ],
     );
   }
@@ -143,7 +177,9 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Featured',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 10),
@@ -170,104 +206,104 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildCategoriesSection(BuildContext context) {
-    final categories = [
-      'All',
-      'Breakfast',
-      'Lunch',
-      'Dinner',
-      'Desserts',
-      'Snacks',
-      'Drinks',
-    ];
+    return Consumer<ProductProvider>(
+      builder: (context, productProvider, child) {
+        final categories =
+            productProvider.categories.isEmpty
+                ? [
+                  'All',
+                  'Breakfast',
+                  'Lunch',
+                  'Dinner',
+                  'Desserts',
+                  'Snacks',
+                  'Drinks',
+                ]
+                : productProvider.categories;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Category',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ),
-        const SizedBox(height: 10),
-        Categories(
-          categories: categories,
-          selectedIndex: _selectedCategoryIndex,
-          onCategorySelected: _onCategorySelected,
-        ),
-      ],
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                'Category',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Categories(
+              categories: categories,
+              selectedIndex: _selectedCategoryIndex,
+              onCategorySelected: _onCategorySelected,
+            ),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildPopularRecipesSection(BuildContext context) {
-    final List<Map<String, String>> popularRecipes = [
-      {
-        'imagePath': 'assets\\img\\popular1.png',
-        'title': 'Healthy Taco Salad with fresh vegetable',
-        'calories': '320 kcal',
-        'time': '20Min',
-      },
-      {
-        'imagePath': 'assets\\img\\popular2.png',
-        'title': 'Healthy Taco Salad with fresh vegetable',
-        'calories': '280 kcal',
-        'time': '12 Min',
-      },
-      {
-        'imagePath': 'assets\\img\\popular1.png',
-        'title': 'Grilled Salmon with Vegetables',
-        'calories': '420 kcal',
-        'time': '25 min',
-      },
-      {
-        'imagePath': 'assets\\img\\popular2.png',
-        'title': 'Avocado Toast with Eggs',
-        'calories': '210 kcal',
-        'time': '10 min',
-      },
-      {
-        'imagePath': 'assets\\img\\popular1.png',
-        'title': 'Berry Smoothie Bowl',
-        'calories': '180 kcal',
-        'time': '5 min',
-      },
-    ];
+    return Consumer<ProductProvider>(
+      builder: (context, productProvider, child) {
+        if (productProvider.isLoading) {
+          return SliverToBoxAdapter(
+            child: Center(child: LoadingWidget()),
+          );
+        }
 
-    return SliverToBoxAdapter(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              'Popular Recipes',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 332,
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              scrollDirection: Axis.horizontal,
-              itemCount: popularRecipes.length,
-              itemBuilder: (context, index) {
-                final recipe = popularRecipes[index];
-                return ItemCard(
-                  imagePath: recipe['imagePath']!,
-                  title: recipe['title']!,
-                  calories: recipe['calories']!,
-                  time: recipe['time']!,
-                  onTap: () {
-                    print('Tapped on ${recipe['title']}');
+        if (productProvider.error.isNotEmpty) {
+          return SliverToBoxAdapter(
+            child: Center(child: Text('Error: ${productProvider.error}')),
+          );
+        }
+
+        final products = productProvider.products;
+
+        if (products.isEmpty) {
+          return SliverToBoxAdapter(
+            child: Center(child: Text('No products found')),
+          );
+        }
+
+        return SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'Popular Products',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 332,
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return ItemCard(
+                      imagePath: product.image,
+                      title: product.title,
+                      calories: '${product.price.toStringAsFixed(2)}',
+                      time: product.category,
+                      id: product.id,
+                    );
                   },
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

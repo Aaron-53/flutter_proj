@@ -1,6 +1,8 @@
-import 'package:first_proj/provider/selectedindexprovider.dart';
+import 'package:first_proj/providers/product_provider.dart';
+import 'package:first_proj/providers/selectedindexprovider.dart';
 import 'package:first_proj/screens/home.dart';
 import 'package:first_proj/screens/item.dart';
+import 'package:first_proj/screens/login.dart';
 import 'package:first_proj/screens/profile.dart';
 import 'package:first_proj/screens/search.dart';
 import 'package:first_proj/widgets/appBar.dart';
@@ -9,8 +11,11 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => SelectedIndexProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => SelectedIndexProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -23,33 +28,42 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(fontFamily: 'SofiaPro'),
-      home: RecipeDetailScreen(),
-      // home: Scaffold(
-      //   extendBody: true,
-      //   backgroundColor: const Color(0xFFFFFFFF),
-      //   extendBodyBehindAppBar: true,
-      //   body: SafeArea(bottom: false, child: HomeScreen()),
-      //   bottomNavigationBar: CustomBottomNavBar(),
-      //   floatingActionButton: FloatingActionButton(
-      //     elevation: 0,
-      //     onPressed: () {},
-      //     shape: ShapeBorder.lerp(
-      //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
-      //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
-      //       0.5,
-      //     ),
-      //     backgroundColor: Color(0xFF042628),
-      //     child: IconButton(
-      //       icon: Image.asset(
-      //         "assets/icons/Hover_button.png",
-      //         width: 24,
-      //         height: 24,
-      //       ),
-      //       onPressed: () {},
-      //     ),
-      //   ),
-      //   floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // ),
+      home: Login(), // Start with the login screen
+    );
+  }
+}
+
+// Main app screen with bottom navigation
+class MainAppScreen extends StatelessWidget {
+  const MainAppScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBody: true,
+      backgroundColor: const Color(0xFFFFFFFF),
+      extendBodyBehindAppBar: true,
+      body: SafeArea(bottom: false, child: HomeScreen()),
+      bottomNavigationBar: CustomBottomNavBar(),
+      floatingActionButton: FloatingActionButton(
+        elevation: 0,
+        onPressed: () {},
+        shape: ShapeBorder.lerp(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+          0.5,
+        ),
+        backgroundColor: Color(0xFF042628),
+        child: IconButton(
+          icon: Image.asset(
+            "assets/icons/Hover_button.png",
+            width: 24,
+            height: 24,
+          ),
+          onPressed: () {},
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
@@ -65,12 +79,12 @@ class HomeScreen extends StatelessWidget {
     switch (selectedIndex) {
       case 0:
         return Home(username: "Alena Sabyam");
-       case 1:
-         return Search();
+      case 1:
+        return Search();
       // case 2:
       //   return NotificationScreen();
-       case 3:
-         return Profile();
+      case 3:
+        return Profile();
       default:
         return Home(username: "John Doe");
     }

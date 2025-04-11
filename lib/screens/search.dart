@@ -1,21 +1,70 @@
+import 'package:first_proj/models/product_model.dart';
 import 'package:first_proj/widgets/category.dart';
 import 'package:first_proj/widgets/editorschoice.dart';
 import 'package:first_proj/widgets/recipecard.dart';
+import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/product_provider.dart';
+import '../screens/item.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});
 
   @override
-  State<Search> createState() => _SearchState();
+  State createState() => _SearchState();
 }
 
 class _SearchState extends State<Search> {
   int _selectedCategoryIndex = 0;
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch products and categories when the screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final productProvider = Provider.of<ProductProvider>(
+        context,
+        listen: false,
+      );
+      productProvider.fetchProducts();
+      productProvider.fetchCategories();
+    });
+  }
 
   void _onCategorySelected(int index) {
     setState(() {
       _selectedCategoryIndex = index;
+    });
+
+    final productProvider = Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    );
+    final categories =
+        productProvider.categories.isEmpty
+            ? [
+              'All',
+              'Breakfast',
+              'Lunch',
+              'Dinner',
+              'Desserts',
+              'Snacks',
+              'Drinks',
+            ]
+            : productProvider.categories;
+
+    if (index > 0) {
+      productProvider.fetchProductsByCategory(categories[index].toLowerCase());
+    } else {
+      productProvider.fetchProducts();
+    }
+  }
+
+  void _onSearch(String query) {
+    setState(() {
+      _searchQuery = query.toLowerCase();
     });
   }
 
@@ -47,7 +96,6 @@ class _SearchState extends State<Search> {
             ),
           ],
         ),
-        
         // Search bar
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
@@ -57,73 +105,116 @@ class _SearchState extends State<Search> {
               TextStyle(fontSize: 20, color: Color(0xFF97A2B0)),
             ),
             leading: Image.asset("assets/icons/Search_dark.png"),
-            backgroundColor: WidgetStateColor.transparent,
+            backgroundColor: MaterialStateColor.resolveWith(
+              (states) => Colors.transparent,
+            ),
             side: WidgetStateProperty.all(
               BorderSide(color: Color(0xFFE6EBF2), width: 3),
             ),
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-            shadowColor: WidgetStateColor.transparent,
+            shadowColor: MaterialStateColor.resolveWith(
+              (states) => Colors.transparent,
+            ),
             padding: WidgetStateProperty.all(
               EdgeInsets.symmetric(horizontal: 12),
             ),
-            onChanged: (value) {
-              // handle search input
-            },
+            onChanged: _onSearch,
           ),
         ),
-        
         // Categories section - fixed
         _buildCategoriesSection(context),
         SizedBox(height: 20),
         // Scrollable content
         Expanded(
-          child: CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.only(top: 20),
-                sliver: SliverToBoxAdapter(
-                  child: _buildPopularRecipesSection(context),
-                ),
-              ),
-              SliverToBoxAdapter(child: const SizedBox(height: 20)),
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Editor\'s Choice',
-                            style: Theme.of(context).textTheme.headlineSmall
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'View All',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Color(0xFF70B9BE),
-                            ),
-                          ),
-                        ],
-                      ),
+          child: Consumer<ProductProvider>(
+            builder: (context, productProvider, child) {
+              if (productProvider.isLoading) {
+                return LoadingWidget(message: 'Loading products...');
+              }
+
+              if (productProvider.error.isNotEmpty) {
+                return Center(child: Text('Error: ${productProvider.error}'));
+              }
+
+              final products = productProvider.products;
+
+              // Filter products based on search query
+              final filteredProducts =
+                  _searchQuery.isEmpty
+                      ? products
+                      : products
+                          .where(
+                            (product) =>
+                                product.title.toLowerCase().contains(
+                                  _searchQuery,
+                                ) ||
+                                product.description.toLowerCase().contains(
+                                  _searchQuery,
+                                ) ||
+                                product.category.toLowerCase().contains(
+                                  _searchQuery,
+                                ),
+                          )
+                          .toList();
+
+              if (filteredProducts.isEmpty) {
+                return Center(
+                  child: Text(
+                    _searchQuery.isEmpty
+                        ? 'No products available'
+                        : 'No products matching "$_searchQuery"',
+                    style: TextStyle(fontSize: 16, color: Color(0xFF748189)),
+                  ),
+                );
+              }
+
+              return CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.only(top: 20),
+                    sliver: SliverToBoxAdapter(
+                      child: _buildProductsSection(context, filteredProducts),
                     ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-              _buildEditorsChoiceSection(context),
-              SliverToBoxAdapter(
-                child: const SizedBox(height: 80),
-              ),
-            ],
+                  ),
+                  SliverToBoxAdapter(child: const SizedBox(height: 20)),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Editor\'s Choice',
+                                style: Theme.of(context).textTheme.headlineSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'View All',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Color(0xFF70B9BE),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                  _buildEditorsChoiceSection(context, filteredProducts),
+                  SliverToBoxAdapter(child: const SizedBox(height: 80)),
+                ],
+              );
+            },
           ),
         ),
       ],
@@ -131,63 +222,36 @@ class _SearchState extends State<Search> {
   }
 
   Widget _buildCategoriesSection(BuildContext context) {
-    final categories = [
-      'All',
-      'Breakfast',
-      'Lunch',
-      'Dinner',
-      'Desserts',
-      'Snacks',
-      'Drinks',
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 10),
-        Categories(
-          categories: categories,
-          selectedIndex: _selectedCategoryIndex,
-          onCategorySelected: _onCategorySelected,
-        ),
-      ],
+    return Consumer<ProductProvider>(
+      builder: (context, productProvider, child) {
+        final categories =
+            productProvider.categories.isEmpty
+                ? [
+                  'All',
+                  'Breakfast',
+                  'Lunch',
+                  'Dinner',
+                  'Desserts',
+                  'Snacks',
+                  'Drinks',
+                ]
+                : productProvider.categories;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+            Categories(
+              categories: categories,
+              selectedIndex: _selectedCategoryIndex,
+              onCategorySelected: _onCategorySelected,
+            ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildPopularRecipesSection(BuildContext context) {
-    final List<Map<String, String>> popularRecipes = [
-      {
-        'imagePath': 'assets/img/popular1.png',
-        'title': 'Healthy Taco Salad with fresh vegetable',
-        'calories': '320 kcal',
-        'time': '20 Min',
-      },
-      {
-        'imagePath': 'assets/img/popular2.png',
-        'title': 'Healthy Taco Salad with fresh vegetable',
-        'calories': '280 kcal',
-        'time': '12 Min',
-      },
-      {
-        'imagePath': 'assets/img/popular1.png',
-        'title': 'Grilled Salmon with Vegetables',
-        'calories': '420 kcal',
-        'time': '25 min',
-      },
-      {
-        'imagePath': 'assets/img/popular2.png',
-        'title': 'Avocado Toast with Eggs',
-        'calories': '210 kcal',
-        'time': '10 min',
-      },
-      {
-        'imagePath': 'assets/img/popular1.png',
-        'title': 'Berry Smoothie Bowl',
-        'calories': '180 kcal',
-        'time': '5 min',
-      },
-    ];
-
+  Widget _buildProductsSection(BuildContext context, List<Product> products) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -197,7 +261,7 @@ class _SearchState extends State<Search> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Popular Recipes',
+                'Products',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -219,14 +283,15 @@ class _SearchState extends State<Search> {
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             scrollDirection: Axis.horizontal,
-            itemCount: popularRecipes.length,
+            itemCount: products.length,
             itemBuilder: (context, index) {
-              final recipe = popularRecipes[index];
+              final product = products[index];
               return RecipeCard(
-                imagePath: recipe['imagePath']!,
-                title: recipe['title']!,
-                calories: recipe['calories']!,
-                time: recipe['time']!,
+                imagePath: product.image,
+                title: product.title,
+                calories: '${product.price.toStringAsFixed(2)}',
+                time: product.category,
+                id: product.id,
               );
             },
           ),
@@ -235,62 +300,35 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Widget _buildEditorsChoiceSection(BuildContext context) {
-    final List<Map<String, String>> editorsChoiceRecipes = [
-      {
-        'imagePath': 'assets\\img\\popular1.png',
-        'title': 'Healthy Taco Salad with fresh vegetable',
-        'authorImage': 'assets\\people\\featured1.png',
-        'authorName': 'John Doe',
-        'rightName': '12 Min',
-      },
-      {
-        'imagePath': 'assets\\img\\popular2.png',
-        'title': 'Avocado Toast with Eggs',
-        'authorImage': 'assets\\people\\featured2.png',
-        'authorName': 'Jane Smith',
-        'rightName': '10 Min',
-      },
-      {
-        'imagePath': 'assets\\img\\popular1.png',
-        'title': 'Healthy Taco Salad with fresh vegetable',
-        'authorImage': 'assets\\people\\featured1.png',
-        'authorName': 'John Doe',
-        'rightName': '12 Min',
-      },
-      {
-        'imagePath': 'assets\\img\\popular2.png',
-        'title': 'Avocado Toast with Eggs',
-        'authorImage': 'assets\\people\\featured2.png',
-        'authorName': 'Jane Smith',
-        'rightName': '10 Min',
-      },{
-        'imagePath': 'assets\\img\\popular1.png',
-        'title': 'Healthy Taco Salad with fresh vegetable',
-        'authorImage': 'assets\\people\\featured1.png',
-        'authorName': 'John Doe',
-        'rightName': '12 Min',
-      },
-      {
-        'imagePath': 'assets\\img\\popular2.png',
-        'title': 'Avocado Toast with Eggs',
-        'authorImage': 'assets\\people\\featured2.png',
-        'authorName': 'Jane Smith',
-        'rightName': '10 Min',
-      },
-    ];
+  Widget _buildEditorsChoiceSection(
+    BuildContext context,
+    List<Product> products,
+  ) {
+    // Use the first 6 products or fewer if there aren't enough
+    final displayProducts =
+        products.length > 6 ? products.sublist(0, 6) : products;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
-        final recipe = editorsChoiceRecipes[index];
+        final product = displayProducts[index];
         return EditorChoiceCard(
-          imagePath: recipe['imagePath']!,
-          title: recipe['title']!,
-          authorImage: recipe['authorImage']!,
-          authorName: recipe['authorName']!,
-          rightName: recipe['rightName']!,
+          id: product.id,
+          imagePath: product.image,
+          title: product.title,
+          authorImage:
+              'assets/people/featured${index % 2 + 1}.png', // Alternate between two author images
+          authorName: 'Author ${index + 1}', // Sample author name
+          rightName: '\$${product.price.toStringAsFixed(2)}',
+          // onTap: () {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => RecipeDetailScreen(productId: product.id),
+          //     ),
+          //   );
+          // },
         );
-      }, childCount: editorsChoiceRecipes.length),
+      }, childCount: displayProducts.length),
     );
   }
 }

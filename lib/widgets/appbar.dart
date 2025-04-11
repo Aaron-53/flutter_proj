@@ -1,4 +1,4 @@
-import 'package:first_proj/provider/selectedindexprovider.dart';
+import 'package:first_proj/providers/selectedindexprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

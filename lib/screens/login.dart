@@ -1,3 +1,4 @@
+import 'package:first_proj/main.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatelessWidget {
@@ -16,7 +17,10 @@ class Login extends StatelessWidget {
         actions: [
           // Later button positioned at top right
           TextButton(
-            onPressed: () => print("Later button pressed"),
+            onPressed: () => {Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainAppScreen()),
+                  )},
             child: const Text(
               "Later",
               style: TextStyle(
