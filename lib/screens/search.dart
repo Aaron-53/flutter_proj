@@ -1,4 +1,5 @@
 import 'package:first_proj/widgets/category.dart';
+import 'package:first_proj/widgets/editorschoice.dart';
 import 'package:first_proj/widgets/recipecard.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,8 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Fixed header section
+        SizedBox(height: 20),
         Stack(
           alignment: Alignment.center,
           children: [
@@ -44,6 +47,8 @@ class _SearchState extends State<Search> {
             ),
           ],
         ),
+        
+        // Search bar
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
           child: SearchBar(
@@ -68,9 +73,59 @@ class _SearchState extends State<Search> {
             },
           ),
         ),
+        
+        // Categories section - fixed
         _buildCategoriesSection(context),
-        SizedBox(height: 20), // Add spacing
-        _buildPopularRecipesSection(context), // Add the new section
+        SizedBox(height: 20),
+        // Scrollable content
+        Expanded(
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.only(top: 20),
+                sliver: SliverToBoxAdapter(
+                  child: _buildPopularRecipesSection(context),
+                ),
+              ),
+              SliverToBoxAdapter(child: const SizedBox(height: 20)),
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Editor\'s Choice',
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'View All',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Color(0xFF70B9BE),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              _buildEditorsChoiceSection(context),
+              SliverToBoxAdapter(
+                child: const SizedBox(height: 80),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -177,6 +232,65 @@ class _SearchState extends State<Search> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildEditorsChoiceSection(BuildContext context) {
+    final List<Map<String, String>> editorsChoiceRecipes = [
+      {
+        'imagePath': 'assets\\img\\popular1.png',
+        'title': 'Healthy Taco Salad with fresh vegetable',
+        'authorImage': 'assets\\people\\featured1.png',
+        'authorName': 'John Doe',
+        'rightName': '12 Min',
+      },
+      {
+        'imagePath': 'assets\\img\\popular2.png',
+        'title': 'Avocado Toast with Eggs',
+        'authorImage': 'assets\\people\\featured2.png',
+        'authorName': 'Jane Smith',
+        'rightName': '10 Min',
+      },
+      {
+        'imagePath': 'assets\\img\\popular1.png',
+        'title': 'Healthy Taco Salad with fresh vegetable',
+        'authorImage': 'assets\\people\\featured1.png',
+        'authorName': 'John Doe',
+        'rightName': '12 Min',
+      },
+      {
+        'imagePath': 'assets\\img\\popular2.png',
+        'title': 'Avocado Toast with Eggs',
+        'authorImage': 'assets\\people\\featured2.png',
+        'authorName': 'Jane Smith',
+        'rightName': '10 Min',
+      },{
+        'imagePath': 'assets\\img\\popular1.png',
+        'title': 'Healthy Taco Salad with fresh vegetable',
+        'authorImage': 'assets\\people\\featured1.png',
+        'authorName': 'John Doe',
+        'rightName': '12 Min',
+      },
+      {
+        'imagePath': 'assets\\img\\popular2.png',
+        'title': 'Avocado Toast with Eggs',
+        'authorImage': 'assets\\people\\featured2.png',
+        'authorName': 'Jane Smith',
+        'rightName': '10 Min',
+      },
+    ];
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((context, index) {
+        final recipe = editorsChoiceRecipes[index];
+        return EditorChoiceCard(
+          imagePath: recipe['imagePath']!,
+          title: recipe['title']!,
+          authorImage: recipe['authorImage']!,
+          authorName: recipe['authorName']!,
+          rightName: recipe['rightName']!,
+        );
+      }, childCount: editorsChoiceRecipes.length),
     );
   }
 }

@@ -48,26 +48,18 @@ class _RecipeCardState extends State<RecipeCard> {
           // Image section with like button
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                8,
-                8,
-                8,
-                5,
-              ), // Adjust padding as needed
-              child: Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    16,
-                  ), // Adjust the radius value as needed
-                  child: Image.asset(
-                    widget.imagePath,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 5),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset(
+                  widget.imagePath,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
+
           // Content section
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 14),

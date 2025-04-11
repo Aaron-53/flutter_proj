@@ -69,6 +69,7 @@ flutter:
       - assets\icons\Profile_unselected.png
       - assets\icons\Search_unselected.png
       - assets\icons\Home_selected.png
+      - assets\icons\Right_arrow.png
       # - assets\icons\Notification_selected.png
       - assets\icons\Profile_selected.png
       - assets\icons\Search_selected.png
