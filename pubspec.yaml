@@ -84,6 +84,15 @@ flutter:
       - assets\icons\fire.png
       - assets\img\popular1.png
       - assets\img\popular2.png
+      - assets\icons\Calories.png
+      - assets\icons\Carbs.png
+      - assets\icons\Fats.png
+      - assets\icons\Proteins.png
+      - assets\icons\Avocado.png
+      - assets\icons\Peanuts.png
+      - assets\icons\RedOnion.png
+      - assets\icons\RedCabbage.png
+      - assets\icons\Tortilla.png
 
 
 

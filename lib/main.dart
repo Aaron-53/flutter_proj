@@ -1,5 +1,6 @@
 import 'package:first_proj/provider/selectedindexprovider.dart';
 import 'package:first_proj/screens/home.dart';
+import 'package:first_proj/screens/item.dart';
 import 'package:first_proj/screens/profile.dart';
 import 'package:first_proj/screens/search.dart';
 import 'package:first_proj/widgets/appBar.dart';
@@ -22,32 +23,33 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(fontFamily: 'SofiaPro'),
-      home: Scaffold(
-        extendBody: true,
-        backgroundColor: const Color(0xFFFFFFFF),
-        extendBodyBehindAppBar: true,
-        body: SafeArea(bottom: false, child: HomeScreen()),
-        bottomNavigationBar: CustomBottomNavBar(),
-        floatingActionButton: FloatingActionButton(
-          elevation: 0,
-          onPressed: () {},
-          shape: ShapeBorder.lerp(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
-            0.5,
-          ),
-          backgroundColor: Color(0xFF042628),
-          child: IconButton(
-            icon: Image.asset(
-              "assets/icons/Hover_button.png",
-              width: 24,
-              height: 24,
-            ),
-            onPressed: () {},
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      ),
+      home: RecipeDetailScreen(),
+      // home: Scaffold(
+      //   extendBody: true,
+      //   backgroundColor: const Color(0xFFFFFFFF),
+      //   extendBodyBehindAppBar: true,
+      //   body: SafeArea(bottom: false, child: HomeScreen()),
+      //   bottomNavigationBar: CustomBottomNavBar(),
+      //   floatingActionButton: FloatingActionButton(
+      //     elevation: 0,
+      //     onPressed: () {},
+      //     shape: ShapeBorder.lerp(
+      //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+      //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+      //       0.5,
+      //     ),
+      //     backgroundColor: Color(0xFF042628),
+      //     child: IconButton(
+      //       icon: Image.asset(
+      //         "assets/icons/Hover_button.png",
+      //         width: 24,
+      //         height: 24,
+      //       ),
+      //       onPressed: () {},
+      //     ),
+      //   ),
+      //   floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // ),
     );
   }
 }
