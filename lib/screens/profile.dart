@@ -1,6 +1,7 @@
 import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/models/product_model.dart';
 import 'package:first_proj/providers/product_provider.dart';
+import 'package:first_proj/widgets/errorHandle.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -138,7 +139,7 @@ class MyFavoritesWidget extends StatelessWidget {
         }
 
         if (productProvider.error.isNotEmpty) {
-          return Center(child: Text('Error: ${productProvider.error}'));
+          return ErrorDisplayWidget();
         }
 
         // If no liked products

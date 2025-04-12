@@ -47,11 +47,9 @@ class ProductProvider extends ChangeNotifier {
           liked: _likedProductIds.contains(_products[i].id),
         );
       }
-      print("1234567890");
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      print("uumbiiii");
       _isLoading = false;
       _error = e.toString();
       notifyListeners();

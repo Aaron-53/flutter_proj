@@ -1,4 +1,5 @@
 import 'package:first_proj/main.dart';
+import 'package:first_proj/widgets/errorHandle.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +50,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
         if (productProvider.error.isNotEmpty) {
           return SliverToBoxAdapter(
-            child: Center(child: Text('Error: ${productProvider.error}')),
+            child: ErrorDisplayWidget(),
           );
         }
 

@@ -3,6 +3,7 @@ import 'package:first_proj/models/product_model.dart';
 import 'package:first_proj/providers/selectedindexprovider.dart';
 import 'package:first_proj/widgets/category.dart';
 import 'package:first_proj/widgets/editorschoice.dart';
+import 'package:first_proj/widgets/errorHandle.dart';
 import 'package:first_proj/widgets/recipecard.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,7 @@ class _SearchState extends State<Search> {
               }
 
               if (productProvider.error.isNotEmpty) {
-                return Center(child: Text('Error: ${productProvider.error}'));
+                return ErrorDisplayWidget();
               }
 
               final products = productProvider.products;
