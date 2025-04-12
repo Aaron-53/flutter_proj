@@ -71,58 +71,7 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Fixed header section
-        SizedBox(height: 20),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Color(0xFF0A2533),
-                  size: 24,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            Text(
-              "Search",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        // Search bar
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-          child: SearchBar(
-            hintText: ' Search',
-            textStyle: WidgetStateProperty.all(
-              TextStyle(fontSize: 20, color: Color(0xFF97A2B0)),
-            ),
-            leading: Image.asset("assets/icons/Search_dark.png"),
-            backgroundColor: MaterialStateColor.resolveWith(
-              (states) => Colors.transparent,
-            ),
-            side: WidgetStateProperty.all(
-              BorderSide(color: Color(0xFFE6EBF2), width: 3),
-            ),
-            shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            ),
-            shadowColor: MaterialStateColor.resolveWith(
-              (states) => Colors.transparent,
-            ),
-            padding: WidgetStateProperty.all(
-              EdgeInsets.symmetric(horizontal: 12),
-            ),
-            onChanged: _onSearch,
-          ),
-        ),
-        // Categories section - fixed
+        _buildSearchBox(context),
         _buildCategoriesSection(context),
         SizedBox(height: 20),
         // Scrollable content
@@ -220,21 +169,76 @@ class _SearchState extends State<Search> {
     );
   }
 
+  Widget _buildSearchBox(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: 20),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Color(0xFF0A2533),
+                  size: 24,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            Text(
+              "Search",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+          child: SearchBar(
+            hintText: ' Search',
+            textStyle: WidgetStateProperty.all(
+              TextStyle(fontSize: 20, color: Color(0xFF97A2B0)),
+            ),
+            leading: Image.asset("assets/icons/Search_dark.png"),
+            backgroundColor: MaterialStateColor.resolveWith(
+              (states) => Colors.transparent,
+            ),
+            side: WidgetStateProperty.all(
+              BorderSide(color: Color(0xFFE6EBF2), width: 3),
+            ),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            ),
+            shadowColor: WidgetStateColor.resolveWith(
+              (states) => Colors.transparent,
+            ),
+            padding: WidgetStateProperty.all(
+              EdgeInsets.symmetric(horizontal: 12),
+            ),
+            onChanged: _onSearch,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildCategoriesSection(BuildContext context) {
     return Consumer<ProductProvider>(
       builder: (context, productProvider, child) {
-        final categories =
-            productProvider.categories.isEmpty
-                ? [
-                  'All',
-                  'Breakfast',
-                  'Lunch',
-                  'Dinner',
-                  'Desserts',
-                  'Snacks',
-                  'Drinks',
-                ]
-                : productProvider.categories;
+
+        final categories = productProvider.categories;
+
+        if (productProvider.isLoading) {
+          return LoadingWidget(message: 'Loading categories...');
+        }
+
+        if (productProvider.error.isNotEmpty) {
+          return Center(child: Text('Error: ${productProvider.error}'));
+        }
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -303,31 +307,21 @@ class _SearchState extends State<Search> {
     BuildContext context,
     List<Product> products,
   ) {
-    // Use the first 6 products or fewer if there aren't enough
-    final displayProducts =
-        products.length > 6 ? products.sublist(0, 6) : products;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
-        final product = displayProducts[index];
+        final product = products[index];
         return EditorChoiceCard(
           id: product.id,
           imagePath: product.image,
           title: product.title,
           authorImage:
-              'assets/people/featured${index % 2 + 1}.png', // Alternate between two author images
-          authorName: 'Author ${index + 1}', // Sample author name
+              'assets/people/featured${index % 2 + 1}.png', 
+          authorName: 'Author ${index + 1}', 
           rightName: '\$${product.price.toStringAsFixed(2)}',
-          // onTap: () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => RecipeDetailScreen(productId: product.id),
-          //     ),
-          //   );
-          // },
+
         );
-      }, childCount: displayProducts.length),
+      }, childCount: products.length),
     );
   }
 }

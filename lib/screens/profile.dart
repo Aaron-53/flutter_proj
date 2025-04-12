@@ -1,10 +1,13 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/models/product_model.dart';
 import 'package:first_proj/providers/product_provider.dart';
+import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  const Profile({super.key, required this.username});
+  final String username;
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -75,14 +78,7 @@ class _ProfileState extends State<Profile> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                blurRadius: 8,
-                spreadRadius: 2,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            boxShadow: AppDecorations.softShadow,
           ),
           child: Row(
             children: [
@@ -100,7 +96,7 @@ class _ProfileState extends State<Profile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Alena Sabyan',
+                      widget.username,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -147,7 +143,7 @@ class MyFavoritesWidget extends StatelessWidget {
 
         // If no products are loaded yet or there's an error, handle it
         if (productProvider.isLoading) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingWidget(message: "Loading..."));
         }
 
         if (productProvider.error.isNotEmpty) {
@@ -247,14 +243,7 @@ class MyFavoritesWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x0633361A).withOpacity(0.3),
-            blurRadius: 16,
-            spreadRadius: 0,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: AppDecorations.softShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

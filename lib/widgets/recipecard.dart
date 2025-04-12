@@ -1,4 +1,6 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/screens/item.dart';
+import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class RecipeCard extends StatefulWidget {
@@ -38,21 +40,13 @@ class _RecipeCardState extends State<RecipeCard> {
         margin: const EdgeInsets.fromLTRB(
           8,
           16,
-          0,
+          8,
           16,
         ), // Add margin to allow shadow to be visible
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Color(0xFFFBFBFB), width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xFF063336).withValues(alpha: 0.1),
-              spreadRadius: 0,
-              blurRadius: 16,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: AppDecorations.softShadow
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +61,6 @@ class _RecipeCardState extends State<RecipeCard> {
                     widget.imagePath,
                     width: double.infinity,
                     fit: BoxFit.fill,
-                    // Add error handling for network images
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: Colors.grey[300],
@@ -79,17 +72,7 @@ class _RecipeCardState extends State<RecipeCard> {
                     // Add loading indicator
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
-                      return Container(
-                        color: Colors.grey[200],
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        ),
-                      );
+                      return LoadingWidget();
                     },
                   ),
                 ),

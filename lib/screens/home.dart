@@ -194,6 +194,14 @@ class _HomeState extends State<Home> {
       builder: (context, productProvider, child) {
         final categories = productProvider.categories;
 
+        if (productProvider.isLoading) {
+          return LoadingWidget(message: 'Loading categories...');
+        }
+
+        if (productProvider.error.isNotEmpty) {
+          return Center(child: Text('Error: ${productProvider.error}'));
+        }
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

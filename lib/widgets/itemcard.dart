@@ -1,4 +1,6 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/screens/item.dart';
+import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class ItemCard extends StatefulWidget {
@@ -45,14 +47,7 @@ class _ItemCardState extends State<ItemCard> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xFF063336).withValues(alpha: 0.1),
-              spreadRadius: 0,
-              blurRadius: 16,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: AppDecorations.softShadow
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +63,31 @@ class _ItemCardState extends State<ItemCard> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         image: DecorationImage(
-                          image: Image.network(widget.imagePath).image,
+                          image:
+                              Image.network(
+                                widget.imagePath,
+                                fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.grey[300],
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.error,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                // Add loading indicator
+                                loadingBuilder: (
+                                  context,
+                                  child,
+                                  loadingProgress,
+                                ) {
+                                  if (loadingProgress == null) return child;
+                                  return LoadingWidget();
+                                },
+                              ).image,
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -131,13 +150,7 @@ class _ItemCardState extends State<ItemCard> {
                         height: 20,
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        widget.calories,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color(0XFF97A2B0),
-                        ),
-                      ),
+                      Text(widget.calories, style: TextStyle(fontSize: 18)),
                       // Separator dot
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 6),

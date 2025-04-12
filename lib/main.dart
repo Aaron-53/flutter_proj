@@ -82,7 +82,7 @@ class HomeScreen extends StatelessWidget {
       // case 2:
       //   return NotificationScreen();
       case 3:
-        return Profile();
+        return Profile(username: "Alena Sabyam");
       default:
         return Home(username: "Alena Sabyam");
     }

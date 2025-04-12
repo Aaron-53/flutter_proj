@@ -1,3 +1,4 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:flutter/material.dart';
 import '../models/product_model.dart';
 
@@ -103,14 +104,7 @@ class _IngredientsListState extends State<IngredientsList> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 0,
-              blurRadius: 16,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: AppDecorations.softShadow
         ),
         child: Row(
           children: [

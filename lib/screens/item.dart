@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
 import '../widgets/ingredients_list.dart';
 import '../widgets/related_products.dart';
+import '../constants/constants.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
   final int productId;
@@ -58,29 +59,19 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           appBar: _buildAppBar(),
           body: Stack(
             children: [
-              // Full-screen background image
-              product.image.startsWith('http')
-                  ? Image.network(
-                    product.image,
+              Image.network(
+                product.image,
+                height: MediaQuery.of(context).size.height * 0.45,
+                width: double.infinity,
+                fit: BoxFit.fill,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
                     height: MediaQuery.of(context).size.height * 0.45,
-                    width: double.infinity,
-                    fit: BoxFit.fill,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height * 0.45,
-                        color: Colors.grey[300],
-                        child: Center(
-                          child: Icon(Icons.error, color: Colors.red),
-                        ),
-                      );
-                    },
-                  )
-                  : Image.asset(
-                    "assets/img/popular1.png",
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                    color: Colors.grey[300],
+                    child: Center(child: Icon(Icons.error, color: Colors.red)),
+                  );
+                },
+              ),
 
               // Scrollable content with rounded corners
               DraggableScrollableSheet(
@@ -94,14 +85,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(30),
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          spreadRadius: 1,
-                          blurRadius: 10,
-                          offset: Offset(0, -5),
-                        ),
-                      ],
+                      boxShadow: AppDecorations.softShadow,
                     ),
                     child: SingleChildScrollView(
                       controller: scrollController,
@@ -137,7 +121,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   // UI Component Methods
 
   PreferredSizeWidget _buildAppBar() {
-    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    final productProvider = Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    );
     final product = productProvider.product;
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -159,15 +146,18 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         IconButton(
           padding: EdgeInsets.zero,
           constraints: BoxConstraints(),
-          icon: product.liked ? Image.asset(
-            "assets/icons/heart_liked.png",
-            fit: BoxFit.cover,
-            width: 90,
-          ): Image.asset(
-            "assets/icons/heart.png",
-            fit: BoxFit.cover,
-            width: 90,
-          ),
+          icon:
+              product.liked
+                  ? Image.asset(
+                    "assets/icons/heart_liked.png",
+                    fit: BoxFit.cover,
+                    width: 90,
+                  )
+                  : Image.asset(
+                    "assets/icons/heart.png",
+                    fit: BoxFit.cover,
+                    width: 90,
+                  ),
           onPressed: () {
             Provider.of<ProductProvider>(
               context,

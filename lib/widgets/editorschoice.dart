@@ -1,4 +1,6 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/screens/item.dart';
+import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class EditorChoiceCard extends StatelessWidget {
@@ -36,14 +38,7 @@ class EditorChoiceCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xFF063336).withValues(alpha: 0.1),
-              spreadRadius: 0,
-              blurRadius: 16,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: AppDecorations.softShadow,
         ),
         child: Row(
           children: [
@@ -53,11 +48,24 @@ class EditorChoiceCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  imagePath,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.fill,
-                ),
+                    imagePath,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.fill,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: Center(
+                          child: Icon(Icons.error, color: Colors.red),
+                        ),
+                      );
+                    },
+                    // Add loading indicator
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return LoadingWidget();
+                    },
+                  ),
               ),
             ),
             // Text section

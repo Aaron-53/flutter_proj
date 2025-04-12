@@ -1,28 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// App Colors
-class AppColors {
-  static const Color hoverButtonColor = Color(0xFF042628);
-  static const Color background = Color(0xFFFFFFFF);
+class AppDecorations {
+  static const List<BoxShadow> softShadow = [BoxShadow(
+    color: Color(0x2A063336), // Already includes alpha (0x1A = 10% opacity)
+    blurRadius: 16,
+    spreadRadius: 0,
+    offset: Offset(0, 2),
+  ), ];
 }
 
-/// App Text Styles
-class AppTextStyles {
-  static const TextStyle heading = TextStyle(
-    fontFamily: 'SofiaPro',
-    fontSize: 24,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-  );
 
-  static const TextStyle body = TextStyle(
-    fontFamily: 'SofiaPro',
-    fontSize: 16,
-    color: Colors.black,
-  );
-}
-
-/// App Assets
-class AppAssets {
-  static const String hoverButtonIcon = "assets/icons/Hover_button.png";
-}
