@@ -7,8 +7,11 @@ class ProductProvider extends ChangeNotifier {
 
   List<Product> _products = [];
   List<String> _categories = [];
+  List<Product> _relatedProducts = [];
+  int currentId = -1;
+
   // Simple list to store liked product IDs
-  List<int> _likedProductIds = [];
+  final List<int> _likedProductIds = [];
   Product _product = Product(
     id: 0,
     title: '',
@@ -23,6 +26,7 @@ class ProductProvider extends ChangeNotifier {
 
   List<Product> get products => _products;
   List<String> get categories => _categories;
+  List<Product> get related => _relatedProducts;
   Product get product => _product;
   bool get isLoading => _isLoading;
   String get error => _error;
@@ -34,7 +38,7 @@ class ProductProvider extends ChangeNotifier {
 
     try {
       _products = await _apiService.getProducts();
-      
+
       // Update liked status based on our stored IDs
       for (var i = 0; i < _products.length; i++) {
         _products[i] = Product(
@@ -63,7 +67,7 @@ class ProductProvider extends ChangeNotifier {
 
     try {
       _product = await _apiService.getProduct(id);
-      
+
       // Update liked status for this product
       _product = Product(
         id: _product.id,
@@ -74,7 +78,7 @@ class ProductProvider extends ChangeNotifier {
         image: _product.image,
         liked: _likedProductIds.contains(_product.id),
       );
-      
+
       _isLoading = false;
       notifyListeners();
       return _product;
@@ -93,7 +97,7 @@ class ProductProvider extends ChangeNotifier {
 
     try {
       _products = await _apiService.getProductsByCategory(category);
-      
+
       // Update liked status based on our stored IDs
       for (var i = 0; i < _products.length; i++) {
         _products[i] = Product(
@@ -106,7 +110,7 @@ class ProductProvider extends ChangeNotifier {
           liked: _likedProductIds.contains(_products[i].id),
         );
       }
-      
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -138,6 +142,41 @@ class ProductProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> fetchRelatedProducts(int id) async {
+    if(currentId == id){_isLoading = true;
+    _error = '';
+    notifyListeners();
+    currentId = id;
+    try {
+      _products = await _apiService.getProducts();
+
+      // Update liked status based on our stored IDs
+      for (var i = 0; i < _products.length; i++) {
+        _products[i] = Product(
+          id: _products[i].id,
+          title: _products[i].title,
+          price: _products[i].price,
+          description: _products[i].description,
+          category: _products[i].category,
+          image: _products[i].image,
+          liked: _likedProductIds.contains(_products[i].id),
+        );
+      }
+      _relatedProducts =
+          _products
+              .where((product) => product.id != id)
+              .take(5)
+              .toList();
+      _isLoading = false;
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      _error = e.toString();
+      notifyListeners();
+    }}
+  }
+
   void toggleProductLike(int productId) {
     // Toggle in the liked IDs list
     if (_likedProductIds.contains(productId)) {
@@ -145,7 +184,7 @@ class ProductProvider extends ChangeNotifier {
     } else {
       _likedProductIds.add(productId);
     }
-    
+
     // Update product in the list
     final index = _products.indexWhere((p) => p.id == productId);
     if (index != -1) {
@@ -174,12 +213,14 @@ class ProductProvider extends ChangeNotifier {
         liked: isLiked,
       );
     }
-    
+
     notifyListeners();
   }
-  
+
   // Get all liked products
   List<Product> getLikedProducts() {
-    return _products.where((product) => _likedProductIds.contains(product.id)).toList();
+    return _products
+        .where((product) => _likedProductIds.contains(product.id))
+        .toList();
   }
 }
