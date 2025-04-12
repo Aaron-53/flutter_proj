@@ -1,3 +1,4 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/providers/product_provider.dart';
 import 'package:first_proj/widgets/category.dart';
 import 'package:first_proj/widgets/featuredbox.dart';
@@ -97,7 +98,7 @@ class _HomeState extends State<Home> {
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontSize: 20,
                       fontWeight: FontWeight.w400,
-                      color: const Color(0xFF0A2533),
+                      color: AppColors.primary,
                     ),
                   ),
                 ],
@@ -110,7 +111,7 @@ class _HomeState extends State<Home> {
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
-                    color: const Color(0xFF0A2533),
+                    color: AppColors.primary,
                   ),
                 ),
               ),
@@ -161,9 +162,10 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Featured',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.primary,
+            ),
           ),
         ),
         const SizedBox(height: 10),
@@ -207,11 +209,25 @@ class _HomeState extends State<Home> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Category',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Category',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  Text(
+                    'See All',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.secondary,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 10),
@@ -253,11 +269,29 @@ class _HomeState extends State<Home> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  'Popular Products',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Popular Recipes',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    Text(
+                      'See All',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.secondary,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 10),

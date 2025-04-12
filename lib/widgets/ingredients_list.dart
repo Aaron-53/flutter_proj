@@ -59,7 +59,7 @@ class _IngredientsListState extends State<IngredientsList> {
               Text(
                 'Ingredients',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey.shade800,
                 ),
@@ -69,7 +69,7 @@ class _IngredientsListState extends State<IngredientsList> {
                 child: const Text(
                   'Add All to Cart',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 18,
                     color: Color(0xFF70B9BE),
                     fontWeight: FontWeight.w500,
                   ),
@@ -80,7 +80,7 @@ class _IngredientsListState extends State<IngredientsList> {
           const SizedBox(height: 4),
           Text(
             '${ingredients.length} items',
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+            style: TextStyle(fontSize: 18, color: Colors.grey.shade500),
           ),
           const SizedBox(height: 12),
           ...ingredients.map(
@@ -128,7 +128,7 @@ class _IngredientsListState extends State<IngredientsList> {
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF0A2533),
+                  color: AppColors.primary,
                 ),
               ),
             ),
@@ -157,15 +157,15 @@ class _IngredientsListState extends State<IngredientsList> {
                           border: Border.all(
                             color: isMinDisabled
                                 ? Colors.grey.shade400
-                                : Color(0xFF70B9BE),
+                                : AppColors.secondary,
                           ),
                         ),
                         child: Icon(
                           Icons.remove,
-                          size: 16,
+                          size: 20,
                           color: isMinDisabled
                               ? Colors.grey.shade400
-                              : Color(0xFF70B9BE),
+                              : AppColors.secondary,
                         ),
                       ),
                     ),
@@ -176,8 +176,9 @@ class _IngredientsListState extends State<IngredientsList> {
                     child: Text(
                       quantity.toString(),
                       style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey.shade800,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.tertiary,
+                        fontSize: 18
                       ),
                     ),
                   ),
@@ -201,15 +202,15 @@ class _IngredientsListState extends State<IngredientsList> {
                           border: Border.all(
                             color: isMaxDisabled
                                 ? Colors.grey.shade400
-                                : Color(0xFF70B9BE),
+                                : AppColors.secondary,
                           ),
                         ),
                         child: Icon(
                           Icons.add,
-                          size: 16,
+                          size: 20,
                           color: isMaxDisabled
                               ? Colors.grey.shade400
-                              : Color(0xFF70B9BE),
+                              : AppColors.secondary,
                         ),
                       ),
                     ),

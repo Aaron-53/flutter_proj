@@ -87,7 +87,7 @@ class _RecipeCardState extends State<RecipeCard> {
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF0A2533),
+                  color: AppColors.primary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

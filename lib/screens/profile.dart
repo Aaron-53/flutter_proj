@@ -14,7 +14,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   @override
   void initState() {
     super.initState();
@@ -37,12 +36,8 @@ class _ProfileState extends State<Profile> {
             ],
           ),
         ),
-        SliverToBoxAdapter(
-          child: MyFavoritesWidget(),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(height: 85),
-        ),
+        SliverToBoxAdapter(child: MyFavoritesWidget()),
+        SliverToBoxAdapter(child: SizedBox(height: 85)),
       ],
     );
   }
@@ -83,7 +78,7 @@ class _ProfileState extends State<Profile> {
           child: Row(
             children: [
               CircleAvatar(
-                backgroundColor: Color(0xFF97A2B0),
+                backgroundColor: AppColors.tertiary,
                 radius: 30,
                 child: CircleAvatar(
                   backgroundImage: AssetImage("assets/people/featured2.png"),
@@ -104,10 +99,7 @@ class _ProfileState extends State<Profile> {
                     const SizedBox(height: 4),
                     Text(
                       'Recipe Developer',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: AppColors.tertiary, fontSize: 14),
                     ),
                   ],
                 ),
@@ -137,9 +129,8 @@ class MyFavoritesWidget extends StatelessWidget {
     return Consumer<ProductProvider>(
       builder: (context, productProvider, child) {
         // Filter products that are liked
-        List<Product> likedProducts = productProvider.products
-            .where((product) => product.liked)
-            .toList();
+        List<Product> likedProducts =
+            productProvider.products.where((product) => product.liked).toList();
 
         // If no products are loaded yet or there's an error, handle it
         if (productProvider.isLoading) {
@@ -163,16 +154,15 @@ class MyFavoritesWidget extends StatelessWidget {
                     children: [
                       Text(
                         'My Favorites',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
                         'See All',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF70B9BE),
-                          fontSize: 18
+                          color: AppColors.secondary,
+                          fontSize: 18,
                         ),
                       ),
                     ],
@@ -208,8 +198,8 @@ class MyFavoritesWidget extends StatelessWidget {
                     'See All',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF70B9BE),
-                      fontSize: 18
+                      color: AppColors.secondary,
+                      fontSize: 18,
                     ),
                   ),
                 ],
@@ -238,7 +228,11 @@ class MyFavoritesWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildFavoriteItem(BuildContext context, Product product, ProductProvider provider) {
+  Widget _buildFavoriteItem(
+    BuildContext context,
+    Product product,
+    ProductProvider provider,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -257,27 +251,28 @@ class MyFavoritesWidget extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
-                  child: product.image.startsWith('http')
-                      ? Image.network(
-                          product.image,
-                          height: 120,
-                          width: double.infinity,
-                          fit: BoxFit.fill,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              height: 120,
-                              width: double.infinity,
-                              color: Colors.grey[300],
-                              child: Icon(Icons.error, color: Colors.red),
-                            );
-                          },
-                        )
-                      : Image.asset(
-                          'assets/img/popular1.png',
-                          height: 120,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
+                  child:
+                      product.image.startsWith('http')
+                          ? Image.network(
+                            product.image,
+                            height: 120,
+                            width: double.infinity,
+                            fit: BoxFit.fill,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 120,
+                                width: double.infinity,
+                                color: Colors.grey[300],
+                                child: Icon(Icons.error, color: Colors.red),
+                              );
+                            },
+                          )
+                          : Image.asset(
+                            'assets/img/popular1.png',
+                            height: 120,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                 ),
               ),
               Positioned(
@@ -298,10 +293,7 @@ class MyFavoritesWidget extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15,
-              vertical: 6,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
             child: Text(
               product.title,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -319,10 +311,12 @@ class MyFavoritesWidget extends StatelessWidget {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundColor: Color(0xFF70B9BE),
+                    backgroundColor: AppColors.secondary,
                     radius: 16,
                     child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/people/featured1.png'),
+                      backgroundImage: AssetImage(
+                        'assets/people/featured1.png',
+                      ),
                       radius: 14,
                     ),
                   ),
@@ -331,7 +325,7 @@ class MyFavoritesWidget extends StatelessWidget {
                     'random guy',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Color(0xFF97A2B0).withOpacity(0.75),
+                      color: AppColors.tertiary.withValues(alpha: 0.75),
                     ),
                   ),
                 ],

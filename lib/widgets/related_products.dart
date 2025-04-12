@@ -1,3 +1,4 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
@@ -75,7 +76,7 @@ class _RelatedProductsState extends State<RelatedProducts> {
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: Color(0xFF70B9BE),
+                  color: AppColors.secondary,
                 ),
               ),
             ],
@@ -160,7 +161,7 @@ class _RelatedProductsState extends State<RelatedProducts> {
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: Color(0xFF70B9BE),
+                  color: AppColors.secondary,
                 ),
               ),
             ],

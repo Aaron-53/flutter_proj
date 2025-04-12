@@ -1,3 +1,4 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/providers/product_provider.dart';
 import 'package:first_proj/providers/selectedindexprovider.dart';
 import 'package:first_proj/screens/home.dart';
@@ -26,15 +27,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(fontFamily: 'SofiaPro'),
-      home: Login(), // Start with the login screen
+      theme: ThemeData(
+        fontFamily: 'SofiaPro',
+        primaryColor: AppColors.primary,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.secondary,
+          primary: AppColors.primary,
+        ),
+      ),
+      home: Login(),
     );
   }
 }
 
 // Main app screen with bottom navigation
 class MainAppScreen extends StatelessWidget {
-  const MainAppScreen({super.key}); 
+  const MainAppScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +56,7 @@ class MainAppScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         elevation: 0,
         onPressed: () {},
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         backgroundColor: Color(0xFF042628),
         child: IconButton(
           icon: Image.asset(

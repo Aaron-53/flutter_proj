@@ -1,4 +1,6 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/models/product_model.dart';
+import 'package:first_proj/providers/selectedindexprovider.dart';
 import 'package:first_proj/widgets/category.dart';
 import 'package:first_proj/widgets/editorschoice.dart';
 import 'package:first_proj/widgets/recipecard.dart';
@@ -41,18 +43,7 @@ class _SearchState extends State<Search> {
       context,
       listen: false,
     );
-    final categories =
-        productProvider.categories.isEmpty
-            ? [
-              'All',
-              'Breakfast',
-              'Lunch',
-              'Dinner',
-              'Desserts',
-              'Snacks',
-              'Drinks',
-            ]
-            : productProvider.categories;
+    final categories = productProvider.categories;
 
     if (index > 0) {
       productProvider.fetchProductsByCategory(categories[index].toLowerCase());
@@ -148,7 +139,7 @@ class _SearchState extends State<Search> {
                                 ).textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
-                                  color: Color(0xFF70B9BE),
+                                  color: AppColors.secondary,
                                 ),
                               ),
                             ],
@@ -170,6 +161,8 @@ class _SearchState extends State<Search> {
   }
 
   Widget _buildSearchBox(BuildContext context) {
+    final provider = Provider.of<SelectedIndexProvider>(context, listen: false);
+
     return Column(
       children: [
         SizedBox(height: 20),
@@ -181,11 +174,11 @@ class _SearchState extends State<Search> {
               child: IconButton(
                 icon: Icon(
                   Icons.arrow_back,
-                  color: Color(0xFF0A2533),
+                  color: AppColors.primary,
                   size: 24,
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
+                  provider.updateIndex(0);
                 },
               ),
             ),
@@ -200,10 +193,10 @@ class _SearchState extends State<Search> {
           child: SearchBar(
             hintText: ' Search',
             textStyle: WidgetStateProperty.all(
-              TextStyle(fontSize: 20, color: Color(0xFF97A2B0)),
+              TextStyle(fontSize: 20, color: AppColors.tertiary),
             ),
             leading: Image.asset("assets/icons/Search_dark.png"),
-            backgroundColor: MaterialStateColor.resolveWith(
+            backgroundColor: WidgetStateColor.resolveWith(
               (states) => Colors.transparent,
             ),
             side: WidgetStateProperty.all(
@@ -228,7 +221,6 @@ class _SearchState extends State<Search> {
   Widget _buildCategoriesSection(BuildContext context) {
     return Consumer<ProductProvider>(
       builder: (context, productProvider, child) {
-
         final categories = productProvider.categories;
 
         if (productProvider.isLoading) {
@@ -264,7 +256,7 @@ class _SearchState extends State<Search> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Products',
+                'Popular Recipes',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -274,7 +266,7 @@ class _SearchState extends State<Search> {
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: Color(0xFF70B9BE),
+                  color: AppColors.secondary,
                 ),
               ),
             ],
@@ -307,7 +299,6 @@ class _SearchState extends State<Search> {
     BuildContext context,
     List<Product> products,
   ) {
-
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
         final product = products[index];
@@ -315,11 +306,9 @@ class _SearchState extends State<Search> {
           id: product.id,
           imagePath: product.image,
           title: product.title,
-          authorImage:
-              'assets/people/featured${index % 2 + 1}.png', 
-          authorName: 'Author ${index + 1}', 
+          authorImage: 'assets/people/featured${index % 2 + 1}.png',
+          authorName: 'Author ${index + 1}',
           rightName: '\$${product.price.toStringAsFixed(2)}',
-
         );
       }, childCount: products.length),
     );

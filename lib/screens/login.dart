@@ -1,3 +1,4 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/main.dart';
 import 'package:flutter/material.dart';
 
@@ -69,7 +70,7 @@ class Login extends StatelessWidget {
               onPressed: () => print("Login pressed"),
               style: FilledButton.styleFrom(
                 minimumSize: const Size(350, 50), // Button size
-                backgroundColor: Color(0xFF042628), // Button background color
+                backgroundColor: AppColors.primary, // Button background color
                 foregroundColor: Colors.white, // Text color
                 padding: const EdgeInsets.symmetric(
                   horizontal: 50,

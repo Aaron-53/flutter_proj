@@ -9,7 +9,7 @@ class EditorChoiceCard extends StatelessWidget {
   final String authorImage;
   final String authorName;
   final String rightName;
-  final int id; 
+  final int id;
 
   const EditorChoiceCard({
     super.key,
@@ -18,12 +18,11 @@ class EditorChoiceCard extends StatelessWidget {
     required this.authorImage,
     required this.authorName,
     required this.rightName,
-    required this.id, 
+    required this.id,
   });
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -48,24 +47,24 @@ class EditorChoiceCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                    imagePath,
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.fill,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[300],
-                        child: Center(
-                          child: Icon(Icons.error, color: Colors.red),
-                        ),
-                      );
-                    },
-                    // Add loading indicator
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return LoadingWidget();
-                    },
-                  ),
+                  imagePath,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.fill,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: Center(
+                        child: Icon(Icons.error, color: Colors.red),
+                      ),
+                    );
+                  },
+                  // Add loading indicator
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return LoadingWidget();
+                  },
+                ),
               ),
             ),
             // Text section
@@ -80,7 +79,7 @@ class EditorChoiceCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF0A2533),
+                        color: AppColors.primary,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -89,9 +88,7 @@ class EditorChoiceCard extends StatelessWidget {
                     Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: Color(
-                            0xFF97A2B0,
-                          ), // This creates the white border
+                          backgroundColor: AppColors.tertiary,
                           radius: 14, // Slightly larger than the inner avatar
                           child: CircleAvatar(
                             backgroundImage: AssetImage(authorImage),
@@ -103,7 +100,7 @@ class EditorChoiceCard extends StatelessWidget {
                           authorName,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Color(0xFF97A2B0).withValues(alpha: 0.75),
+                            color: AppColors.tertiary.withValues(alpha: 0.75),
                           ),
                         ),
                       ],

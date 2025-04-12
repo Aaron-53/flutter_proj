@@ -47,7 +47,7 @@ class _ItemCardState extends State<ItemCard> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: AppDecorations.softShadow
+          boxShadow: AppDecorations.softShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,7 +132,7 @@ class _ItemCardState extends State<ItemCard> {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF0A2533),
+                      color: AppColors.primary,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -150,14 +150,20 @@ class _ItemCardState extends State<ItemCard> {
                         height: 20,
                       ),
                       const SizedBox(width: 4),
-                      Text(widget.calories, style: TextStyle(fontSize: 18)),
+                      Text(
+                        widget.calories,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppColors.tertiary,
+                        ),
+                      ),
                       // Separator dot
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 6),
                         width: 4,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: Color(0xFF97A2B0),
+                          color: AppColors.tertiary,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -165,14 +171,14 @@ class _ItemCardState extends State<ItemCard> {
                       Icon(
                         Icons.access_time,
                         size: 20,
-                        color: Color(0xFF97A2B0),
+                        color: AppColors.tertiary,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         "20 Min",
                         style: TextStyle(
                           fontSize: 18,
-                          color: Color(0xFF97A2B0),
+                          color: AppColors.tertiary,
                         ),
                       ),
                     ],

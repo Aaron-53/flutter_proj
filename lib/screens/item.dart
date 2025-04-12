@@ -18,6 +18,7 @@ class RecipeDetailScreen extends StatefulWidget {
 
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   int _selectedTabIndex = 0;
+  bool _expandedDescription = false;
 
   void onClose() {
     Navigator.push(
@@ -70,6 +71,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     color: Colors.grey[300],
                     child: Center(child: Icon(Icons.error, color: Colors.red)),
                   );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return LoadingWidget();
                 },
               ),
 
@@ -137,7 +142,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: IconButton(
-            icon: const Icon(Icons.close, color: Colors.grey),
+            icon: const Icon(Icons.close, color: AppColors.tertiary),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -201,7 +206,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF0A2533),
+                    color: AppColors.primary,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -209,11 +214,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               ),
               Row(
                 children: const [
-                  Icon(Icons.access_time, size: 16, color: Colors.grey),
+                  Icon(Icons.access_time, size: 16, color: AppColors.tertiary),
                   SizedBox(width: 4),
                   Text(
                     '15 Min',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                    style: TextStyle(fontSize: 18, color: AppColors.tertiary),
                   ),
                 ],
               ),
@@ -225,28 +230,32 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               children: [
                 TextSpan(
                   text:
-                      productProvider.product.description.length > 100
+                      !_expandedDescription &&
+                              productProvider.product.description.length > 100
                           ? '${productProvider.product.description.substring(0, 100)}... '
                           : productProvider.product.description,
-                  style: TextStyle(fontSize: 16, color: Color(0xFF748189)),
+                  style: TextStyle(fontSize: 16, color: AppColors.tertiary),
                 ),
-                WidgetSpan(
-                  alignment: PlaceholderAlignment.baseline,
-                  baseline: TextBaseline.alphabetic,
-                  child: GestureDetector(
-                    onTap: () {
-                      // Handle view more tap
-                    },
-                    child: Text(
-                      'View More',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF0A2533),
-                        fontWeight: FontWeight.w500,
+                if (productProvider.product.description.length > 100)
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _expandedDescription = !_expandedDescription;
+                        });
+                      },
+                      child: Text(
+                        _expandedDescription ? 'View Less' : 'View More',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
@@ -316,7 +325,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Color(0xFFe6ebf2),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Image.asset(
@@ -330,7 +339,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           Expanded(
             child: Text(
               '${item['value']} ${item['label']}',
-              style: const TextStyle(fontSize: 16, color: Color(0xFF0A2533)),
+              style: const TextStyle(fontSize: 16, color: AppColors.primary),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -363,7 +372,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     decoration: BoxDecoration(
                       color:
                           _selectedTabIndex == 0
-                              ? const Color(0xFF042628)
+                              ? AppColors.primary
                               : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -375,7 +384,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         color:
                             _selectedTabIndex == 0
                                 ? Colors.white
-                                : const Color(0xFF0A2533),
+                                : AppColors.primary,
                       ),
                     ),
                   ),
@@ -395,19 +404,19 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     decoration: BoxDecoration(
                       color:
                           _selectedTabIndex == 1
-                              ? const Color(0xFF042628)
+                              ? AppColors.primary
                               : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      'Details',
+                      'Instructions',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color:
                             _selectedTabIndex == 1
                                 ? Colors.white
-                                : const Color(0xFF0A2533),
+                                : AppColors.primary,
                       ),
                     ),
                   ),
@@ -463,7 +472,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF0A2533),
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 4),
@@ -480,7 +489,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: const Color(0xFF70B9BE),
+          color: AppColors.secondary,
           borderRadius: BorderRadius.circular(12),
         ),
         child: const Text(
@@ -504,7 +513,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         children: [
           const Text(
             'Creator',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           Row(
@@ -522,12 +531,12 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       'Natalia Luca',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: 18,
                       ),
                     ),
                     Text(
                       'Food blogger and recipe developer',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                      style: TextStyle(color: AppColors.tertiary, fontSize: 16),
                     ),
                   ],
                 ),

@@ -1,3 +1,4 @@
+import 'package:first_proj/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class Categories extends StatelessWidget {
@@ -30,10 +31,10 @@ class Categories extends StatelessWidget {
               style: TextButton.styleFrom(
                 backgroundColor:
                     isSelected
-                        ? const Color(0xFF70B9BE)
+                        ? AppColors.secondary
                         : const Color(0xFFF1F5F5),
                 foregroundColor:
-                    isSelected ? Colors.white : const Color(0xFF0A2533),
+                    isSelected ? Colors.white : AppColors.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
