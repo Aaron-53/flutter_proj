@@ -36,6 +36,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         context,
         listen: false,
       );
+      productProvider.addNestedNav(widget.productId);
       productProvider.fetchProductById(widget.productId);
     });
   }
@@ -49,9 +50,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         }
 
         if (productProvider.error.isNotEmpty) {
-          return SliverToBoxAdapter(
-            child: ErrorDisplayWidget(),
-          );
+          return Scaffold(body: ErrorDisplayWidget());
         }
 
         final product = productProvider.product;
@@ -144,7 +143,24 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           ),
           child: IconButton(
             icon: const Icon(Icons.close, color: AppColors.tertiary),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              int next = productProvider.nextID;
+              if (next == widget.productId) {
+                next = productProvider.nextID;
+              }
+              if (next == -1) {
+                Navigator.pop(context);
+              } else {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecipeDetailScreen(productId: next),
+                  ),
+                  (Route<dynamic> route) =>
+                      route.isFirst, // This keeps only the first route (home)
+                );
+              }
+            },
           ),
         ),
       ),

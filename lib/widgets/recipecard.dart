@@ -1,14 +1,16 @@
 import 'package:first_proj/constants/constants.dart';
+import 'package:first_proj/providers/product_provider.dart';
 import 'package:first_proj/screens/item.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RecipeCard extends StatefulWidget {
   final String imagePath;
   final String title;
   final String calories;
   final String time;
-  final int id; 
+  final int id;
 
   const RecipeCard({
     super.key,
@@ -17,7 +19,7 @@ class RecipeCard extends StatefulWidget {
     required this.calories,
     required this.time,
     required this.id,
-    });
+  });
 
   @override
   State<RecipeCard> createState() => _RecipeCardState();
@@ -26,9 +28,9 @@ class RecipeCard extends StatefulWidget {
 class _RecipeCardState extends State<RecipeCard> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector( // Wrap the container with GestureDetector
+    return GestureDetector(
+      // Wrap the container with GestureDetector
       onTap: () {
-        print(context);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -47,7 +49,7 @@ class _RecipeCardState extends State<RecipeCard> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: AppDecorations.softShadow
+          boxShadow: AppDecorations.softShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

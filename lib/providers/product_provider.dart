@@ -9,6 +9,7 @@ class ProductProvider extends ChangeNotifier {
   List<String> _categories = [];
   List<Product> _relatedProducts = [];
   int currentId = -1;
+  List<int> nestedNav = [];
 
   // Simple list to store liked product IDs
   final List<int> _likedProductIds = [];
@@ -30,6 +31,8 @@ class ProductProvider extends ChangeNotifier {
   Product get product => _product;
   bool get isLoading => _isLoading;
   String get error => _error;
+  int get nextID => nestedNav.isNotEmpty ? nestedNav.removeLast() : -1;
+
 
   Future<void> fetchProducts() async {
     _isLoading = true;
@@ -143,38 +146,41 @@ class ProductProvider extends ChangeNotifier {
   }
 
   Future<void> fetchRelatedProducts(int id) async {
-    if(currentId == id){_isLoading = true;
-    _error = '';
-    notifyListeners();
-    currentId = id;
-    try {
-      _products = await _apiService.getProducts();
+    if (currentId != id) {
+      _isLoading = true;
+      _error = '';
+      notifyListeners();
+      currentId = id;
+      try {
+        _products = await _apiService.getProducts();
 
-      // Update liked status based on our stored IDs
-      for (var i = 0; i < _products.length; i++) {
-        _products[i] = Product(
-          id: _products[i].id,
-          title: _products[i].title,
-          price: _products[i].price,
-          description: _products[i].description,
-          category: _products[i].category,
-          image: _products[i].image,
-          liked: _likedProductIds.contains(_products[i].id),
-        );
+        // Update liked status based on our stored IDs
+        for (var i = 0; i < _products.length; i++) {
+          _products[i] = Product(
+            id: _products[i].id,
+            title: _products[i].title,
+            price: _products[i].price,
+            description: _products[i].description,
+            category: _products[i].category,
+            image: _products[i].image,
+            liked: _likedProductIds.contains(_products[i].id),
+          );
+        }
+        _relatedProducts =
+            _products.where((product) => product.id != id).take(5).toList();
+        _isLoading = false;
+        _isLoading = false;
+        notifyListeners();
+      } catch (e) {
+        _isLoading = false;
+        _error = e.toString();
+        notifyListeners();
       }
-      _relatedProducts =
-          _products
-              .where((product) => product.id != id)
-              .take(5)
-              .toList();
-      _isLoading = false;
-      _isLoading = false;
-      notifyListeners();
-    } catch (e) {
-      _isLoading = false;
-      _error = e.toString();
-      notifyListeners();
-    }}
+    }
+  }
+
+  void addNestedNav(int id) {
+    nestedNav.add(id);
   }
 
   void toggleProductLike(int productId) {
