@@ -147,7 +147,6 @@ class ProductProvider extends ChangeNotifier {
 
   Future<void> fetchRelatedProducts(int id) async {
     if (currentId != id) {
-      _isLoading = true;
       _error = '';
       notifyListeners();
       currentId = id;
@@ -168,11 +167,8 @@ class ProductProvider extends ChangeNotifier {
         }
         _relatedProducts =
             _products.where((product) => product.id != id).take(5).toList();
-        _isLoading = false;
-        _isLoading = false;
         notifyListeners();
       } catch (e) {
-        _isLoading = false;
         _error = e.toString();
         notifyListeners();
       }

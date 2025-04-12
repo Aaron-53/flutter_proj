@@ -31,13 +31,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   @override
   void initState() {
     super.initState();
+    final productProvider = Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final productProvider = Provider.of<ProductProvider>(
-        context,
-        listen: false,
-      );
-      productProvider.addNestedNav(widget.productId);
-      productProvider.fetchProductById(widget.productId);
+      if (productProvider.currentId != widget.productId) {
+        productProvider.addNestedNav(widget.productId);
+        productProvider.fetchProductById(widget.productId);
+      }
     });
   }
 
@@ -45,6 +47,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   Widget build(BuildContext context) {
     return Consumer<ProductProvider>(
       builder: (context, productProvider, child) {
+        print("loading: ${productProvider.isLoading}");
         if (productProvider.isLoading) {
           return Scaffold(body: Center(child: LoadingWidget()));
         }

@@ -1,9 +1,7 @@
 import 'package:first_proj/constants/constants.dart';
-import 'package:first_proj/providers/product_provider.dart';
 import 'package:first_proj/screens/item.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RecipeCard extends StatefulWidget {
   final String imagePath;
