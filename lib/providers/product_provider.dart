@@ -23,6 +23,7 @@ class ProductProvider extends ChangeNotifier {
     liked: false,
   );
   bool _isLoading = false;
+  bool _isCatLoading = false;
   String _error = '';
 
   List<Product> get products => _products;
@@ -30,6 +31,7 @@ class ProductProvider extends ChangeNotifier {
   List<Product> get related => _relatedProducts;
   Product get product => _product;
   bool get isLoading => _isLoading;
+  bool get isCatLoading => _isCatLoading;
   String get error => _error;
   int get nextID => nestedNav.isNotEmpty ? nestedNav.removeLast() : -1;
 
@@ -124,9 +126,9 @@ class ProductProvider extends ChangeNotifier {
   }
 
   Future<void> fetchCategories() async {
-    if (_categories.isNotEmpty) return; // Don't fetch if already loaded
+    if (_categories.isNotEmpty) return; 
 
-    _isLoading = true;
+    _isCatLoading = true;
     _error = '';
     notifyListeners();
 
@@ -136,10 +138,10 @@ class ProductProvider extends ChangeNotifier {
       if (!_categories.contains('All')) {
         _categories.insert(0, 'All');
       }
-      _isLoading = false;
+      _isCatLoading = false;
       notifyListeners();
     } catch (e) {
-      _isLoading = false;
+      _isCatLoading = false;
       _error = e.toString();
       notifyListeners();
     }

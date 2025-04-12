@@ -224,7 +224,7 @@ class _SearchState extends State<Search> {
       builder: (context, productProvider, child) {
         final categories = productProvider.categories;
 
-        if (productProvider.isLoading) {
+        if (productProvider.isCatLoading) {
           return LoadingWidget(message: 'Loading categories...');
         }
 
