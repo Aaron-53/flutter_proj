@@ -26,14 +26,13 @@ class FeaturedBox extends StatelessWidget {
         image: DecorationImage(image: AssetImage(imagePath), fit: BoxFit.cover),
       ),
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: 200, // Set your desired width
+              width: 150, 
               child: Text(
                 title,
                 style: const TextStyle(

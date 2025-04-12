@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
 
 // Main app screen with bottom navigation
 class MainAppScreen extends StatelessWidget {
-  const MainAppScreen({Key? key}) : super(key: key);
+  const MainAppScreen({super.key}); 
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +43,13 @@ class MainAppScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFFFFFFF),
       extendBodyBehindAppBar: true,
       body: SafeArea(bottom: false, child: HomeScreen()),
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: CustomBottomNavBar(),
       floatingActionButton: FloatingActionButton(
         elevation: 0,
         onPressed: () {},
-        shape: ShapeBorder.lerp(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
-          0.5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
         ),
         backgroundColor: Color(0xFF042628),
         child: IconButton(
@@ -85,7 +84,7 @@ class HomeScreen extends StatelessWidget {
       case 3:
         return Profile();
       default:
-        return Home(username: "John Doe");
+        return Home(username: "Alena Sabyam");
     }
   }
 }

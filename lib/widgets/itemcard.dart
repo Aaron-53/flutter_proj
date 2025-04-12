@@ -58,21 +58,15 @@ class _ItemCardState extends State<ItemCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // Image section with like button
             Expanded(
               child: Stack(
                 children: [
-                  // Image container
                   Padding(
-                    padding: const EdgeInsets.all(
-                      12.0,
-                    ), // Adjust padding as needed
+                    padding: const EdgeInsets.all(12.0),
                     child: Container(
                       height: 160,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          12,
-                        ), // Change to all corners
+                        borderRadius: BorderRadius.circular(12),
                         image: DecorationImage(
                           image: Image.network(widget.imagePath).image,
                           fit: BoxFit.fill,
@@ -80,7 +74,6 @@ class _ItemCardState extends State<ItemCard> {
                       ),
                     ),
                   ),
-                  // Like button
                   Positioned(
                     top: 12,
                     right: 12,
@@ -109,7 +102,6 @@ class _ItemCardState extends State<ItemCard> {
                 ],
               ),
             ),
-            // Content section
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -137,7 +129,6 @@ class _ItemCardState extends State<ItemCard> {
                         "assets/icons/fire.png",
                         width: 20,
                         height: 20,
-                        color: const Color(0xFF97A2B0),
                       ),
                       const SizedBox(width: 4),
                       Text(

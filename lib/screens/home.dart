@@ -41,18 +41,7 @@ class _HomeState extends State<Home> {
       context,
       listen: false,
     );
-    final categories =
-        productProvider.categories.isEmpty
-            ? [
-              'All',
-              'Breakfast',
-              'Lunch',
-              'Dinner',
-              'Desserts',
-              'Snacks',
-              'Drinks',
-            ]
-            : productProvider.categories;
+    final categories = productProvider.categories;
 
     if (index > 0) {
       productProvider.fetchProductsByCategory(categories[index].toLowerCase());
@@ -86,8 +75,7 @@ class _HomeState extends State<Home> {
   Widget _buildGreetingBox(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(24, 16, 0, 16),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+      padding: const EdgeInsets.fromLTRB(24, 16, 12, 16),
       child: Stack(
         children: [
           Column(
@@ -105,7 +93,7 @@ class _HomeState extends State<Home> {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Good Morning,',
+                    'Good Morning',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontSize: 20,
                       fontWeight: FontWeight.w400,
@@ -115,18 +103,16 @@ class _HomeState extends State<Home> {
                 ],
               ),
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Text(
-                    widget.username,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                      color: const Color(0xFF0A2533),
-                    ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  widget.username,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: const Color(0xFF0A2533),
                   ),
-                ],
+                ),
               ),
             ],
           ),
@@ -206,18 +192,7 @@ class _HomeState extends State<Home> {
   Widget _buildCategoriesSection(BuildContext context) {
     return Consumer<ProductProvider>(
       builder: (context, productProvider, child) {
-        final categories =
-            productProvider.categories.isEmpty
-                ? [
-                  'All',
-                  'Breakfast',
-                  'Lunch',
-                  'Dinner',
-                  'Desserts',
-                  'Snacks',
-                  'Drinks',
-                ]
-                : productProvider.categories;
+        final categories = productProvider.categories;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,9 +222,7 @@ class _HomeState extends State<Home> {
     return Consumer<ProductProvider>(
       builder: (context, productProvider, child) {
         if (productProvider.isLoading) {
-          return SliverToBoxAdapter(
-            child: Center(child: LoadingWidget()),
-          );
+          return SliverToBoxAdapter(child: Center(child: LoadingWidget()));
         }
 
         if (productProvider.error.isNotEmpty) {

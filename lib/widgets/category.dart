@@ -38,9 +38,7 @@ class Categories extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: Center(
-                child: Text(categories[index], style: TextStyle(fontSize: 16)),
-              ),
+              child: Text(categories[index], style: TextStyle(fontSize: 16)),
             ),
           );
         },

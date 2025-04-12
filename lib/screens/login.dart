@@ -6,8 +6,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(      
-
+    return Scaffold(
       extendBodyBehindAppBar: true,
 
       // App bar with Later button on top right
@@ -17,10 +16,13 @@ class Login extends StatelessWidget {
         actions: [
           // Later button positioned at top right
           TextButton(
-            onPressed: () => {Navigator.pushReplacement(
+            onPressed:
+                () => {
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => MainAppScreen()),
-                  )},
+                  ),
+                },
             child: const Text(
               "Later",
               style: TextStyle(
@@ -32,7 +34,7 @@ class Login extends StatelessWidget {
           ),
         ],
       ),
-      
+
       body: Container(
         // Add padding around all content
         padding: const EdgeInsets.all(20.0),
@@ -41,20 +43,17 @@ class Login extends StatelessWidget {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets\\img\\Login_BG.png"),
-            fit: BoxFit.cover, // This makes the image cover the entire container
+            fit:
+                BoxFit.cover, // This makes the image cover the entire container
           ),
         ),
 
         width: double.infinity,
-        
+
         // Main content column
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // Spacer to push content down           
-            const Spacer(flex: 2),
-
-
-            // Motivational text
             const Text(
               "Help your path to health goals with happiness",
               textAlign: TextAlign.center,
@@ -65,7 +64,6 @@ class Login extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20), // Space between buttons
-            
             // Login button with rounded borders and background
             FilledButton(
               onPressed: () => print("Login pressed"),
@@ -73,17 +71,17 @@ class Login extends StatelessWidget {
                 minimumSize: const Size(350, 50), // Button size
                 backgroundColor: Color(0xFF042628), // Button background color
                 foregroundColor: Colors.white, // Text color
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 50,
+                  vertical: 15,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15), // Rounded borders
                 ),
               ),
               child: const Text(
                 "Login",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
 
@@ -99,7 +97,7 @@ class Login extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Bottom spacer
             const SizedBox(height: 50),
           ],
