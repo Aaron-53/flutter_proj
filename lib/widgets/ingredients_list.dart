@@ -1,10 +1,11 @@
 import 'package:first_proj/constants/constants.dart';
+import 'package:first_proj/widgets/sectiontitle.dart';
 import 'package:flutter/material.dart';
 import '../models/product_model.dart';
 
 class IngredientsList extends StatefulWidget {
   final Product product;
-  
+
   const IngredientsList({Key? key, required this.product}) : super(key: key);
 
   @override
@@ -13,7 +14,7 @@ class IngredientsList extends StatefulWidget {
 
 class _IngredientsListState extends State<IngredientsList> {
   Map<String, int> _ingredientQuantities = {};
-  
+
   // Sample ingredients that won't be from API
   final List<Map<String, String>> ingredients = [
     {
@@ -34,7 +35,7 @@ class _IngredientsListState extends State<IngredientsList> {
       'icon': "assets\\icons\\RedOnion.png",
     },
   ];
-  
+
   @override
   void initState() {
     super.initState();
@@ -53,39 +54,14 @@ class _IngredientsListState extends State<IngredientsList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Ingredients',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade800,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: const Text(
-                  'Add All to Cart',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFF70B9BE),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          SectionTitle(title: "Ingridients", actionText: "Add all to cart", padding: 0),
           const SizedBox(height: 4),
           Text(
             '${ingredients.length} items',
             style: TextStyle(fontSize: 18, color: Colors.grey.shade500),
           ),
           const SizedBox(height: 12),
-          ...ingredients.map(
-            (ingredient) => _buildIngredientItem(ingredient),
-          ),
+          ...ingredients.map((ingredient) => _buildIngredientItem(ingredient)),
         ],
       ),
     );
@@ -96,7 +72,7 @@ class _IngredientsListState extends State<IngredientsList> {
     final quantity = _ingredientQuantities[name] ?? 1;
     final bool isMinDisabled = quantity <= 1;
     final bool isMaxDisabled = quantity >= 9;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Container(
@@ -104,7 +80,7 @@ class _IngredientsListState extends State<IngredientsList> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: AppDecorations.softShadow
+          boxShadow: AppDecorations.softShadow,
         ),
         child: Row(
           children: [
@@ -139,33 +115,36 @@ class _IngredientsListState extends State<IngredientsList> {
                 children: [
                   // Minus button
                   GestureDetector(
-                    onTap: isMinDisabled
-                        ? null
-                        : () {
-                            setState(() {
-                              if (_ingredientQuantities[name]! > 1) {
-                                _ingredientQuantities[name] =
-                                    _ingredientQuantities[name]! - 1;
-                              }
-                            });
-                          },
+                    onTap:
+                        isMinDisabled
+                            ? null
+                            : () {
+                              setState(() {
+                                if (_ingredientQuantities[name]! > 1) {
+                                  _ingredientQuantities[name] =
+                                      _ingredientQuantities[name]! - 1;
+                                }
+                              });
+                            },
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
                           border: Border.all(
-                            color: isMinDisabled
-                                ? Colors.grey.shade400
-                                : AppColors.secondary,
+                            color:
+                                isMinDisabled
+                                    ? Colors.grey.shade400
+                                    : AppColors.secondary,
                           ),
                         ),
                         child: Icon(
                           Icons.remove,
                           size: 20,
-                          color: isMinDisabled
-                              ? Colors.grey.shade400
-                              : AppColors.secondary,
+                          color:
+                              isMinDisabled
+                                  ? Colors.grey.shade400
+                                  : AppColors.secondary,
                         ),
                       ),
                     ),
@@ -178,39 +157,42 @@ class _IngredientsListState extends State<IngredientsList> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: AppColors.tertiary,
-                        fontSize: 18
+                        fontSize: 18,
                       ),
                     ),
                   ),
                   // Plus button
                   GestureDetector(
-                    onTap: isMaxDisabled
-                        ? null
-                        : () {
-                            setState(() {
-                              if (_ingredientQuantities[name]! < 9) {
-                                _ingredientQuantities[name] =
-                                    _ingredientQuantities[name]! + 1;
-                              }
-                            });
-                          },
+                    onTap:
+                        isMaxDisabled
+                            ? null
+                            : () {
+                              setState(() {
+                                if (_ingredientQuantities[name]! < 9) {
+                                  _ingredientQuantities[name] =
+                                      _ingredientQuantities[name]! + 1;
+                                }
+                              });
+                            },
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
                           border: Border.all(
-                            color: isMaxDisabled
-                                ? Colors.grey.shade400
-                                : AppColors.secondary,
+                            color:
+                                isMaxDisabled
+                                    ? Colors.grey.shade400
+                                    : AppColors.secondary,
                           ),
                         ),
                         child: Icon(
                           Icons.add,
                           size: 20,
-                          color: isMaxDisabled
-                              ? Colors.grey.shade400
-                              : AppColors.secondary,
+                          color:
+                              isMaxDisabled
+                                  ? Colors.grey.shade400
+                                  : AppColors.secondary,
                         ),
                       ),
                     ),

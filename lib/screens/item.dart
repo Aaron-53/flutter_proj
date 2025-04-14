@@ -1,6 +1,7 @@
 import 'package:first_proj/main.dart';
 import 'package:first_proj/widgets/errorHandle.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
+import 'package:first_proj/widgets/sectiontitle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
@@ -530,10 +531,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Creator',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
+          SectionTitle(title: "Creator", padding: 0,),
           const SizedBox(height: 12),
           Row(
             children: [

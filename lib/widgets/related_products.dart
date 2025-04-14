@@ -1,6 +1,6 @@
-import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/widgets/itemcard.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
+import 'package:first_proj/widgets/sectiontitle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
@@ -39,28 +39,7 @@ class _RelatedProductsState extends State<RelatedProducts> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Related Products',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'View All',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: AppColors.secondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            SectionTitle(title: "Related Products", actionText: "View All"),
             const SizedBox(height: 10),
             productProvider.isLoading
                 ? Center(child: LoadingWidget())
