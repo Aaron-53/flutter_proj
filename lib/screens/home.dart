@@ -297,22 +297,23 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 10),
               SizedBox(
-                height: 332,
+                height: 280,
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   scrollDirection: Axis.horizontal,
                   itemCount: products.length,
                   itemBuilder: (context, index) {
                     final product = products[index];
-                    return ItemCard(
+                    return AspectRatio(
+                      aspectRatio: 5/6,
+                      child:ItemCard(
                       imagePath: product.image,
                       title: product.title,
-                      calories: '${product.price.toStringAsFixed(2)}',
-                      time: product.category,
+                      calories: product.price.toStringAsFixed(2),
                       id: product.id,
                       liked: product.liked,
                       toggleLiked: productProvider.toggleProductLike,
-                    );
+                    ));
                   },
                 ),
               ),

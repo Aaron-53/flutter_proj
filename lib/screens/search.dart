@@ -4,7 +4,7 @@ import 'package:first_proj/providers/selectedindexprovider.dart';
 import 'package:first_proj/widgets/category.dart';
 import 'package:first_proj/widgets/editorschoice.dart';
 import 'package:first_proj/widgets/errorHandle.dart';
-import 'package:first_proj/widgets/recipecard.dart';
+import 'package:first_proj/widgets/itemcard.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -282,12 +282,16 @@ class _SearchState extends State<Search> {
             itemCount: products.length,
             itemBuilder: (context, index) {
               final product = products[index];
-              return RecipeCard(
-                imagePath: product.image,
-                title: product.title,
-                calories: '${product.price.toStringAsFixed(2)}',
-                time: product.category,
-                id: product.id,
+              return AspectRatio(
+                aspectRatio: 25 / 34,
+                child: ItemCard(
+                  imagePath: product.image,
+                  title: product.title,
+                  details: false,
+                  showLiked: false,
+                  id: product.id,
+                  textLines: 1,
+                ),
               );
             },
           ),

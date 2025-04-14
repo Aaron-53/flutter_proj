@@ -3,6 +3,7 @@ import 'package:first_proj/models/product_model.dart';
 import 'package:first_proj/providers/product_provider.dart';
 import 'package:first_proj/screens/item.dart';
 import 'package:first_proj/widgets/errorHandle.dart';
+import 'package:first_proj/widgets/itemcard.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -216,133 +217,25 @@ class MyFavoritesWidget extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,
-                childAspectRatio: 3 / 4,
+                childAspectRatio: 26 / 33,
               ),
               itemCount: likedProducts.length,
               itemBuilder: (context, index) {
                 final recipe = likedProducts[index];
-                return _buildFavoriteItem(context, recipe, productProvider);
+                return ItemCard(
+                  imagePath: recipe.image,
+                  title: recipe.title,
+                  calories: recipe.price.toStringAsFixed(2),
+                  id: recipe.id,
+                  liked: recipe.liked,
+                  toggleLiked: productProvider.toggleProductLike,
+                  author: true,
+                );
               },
             ),
           ],
         );
       },
-    );
-  }
-
-  Widget _buildFavoriteItem(
-    BuildContext context,
-    Product product,
-    ProductProvider provider,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RecipeDetailScreen(productId: product.id),
-          ),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: AppDecorations.softShadow,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(12),
-                    ),
-                    child: Image.network(
-                      product.image,
-                      fit: BoxFit.fill,
-                      height: 120,
-                      width: double.infinity,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: Center(
-                            child: Icon(Icons.error, color: Colors.red),
-                          ),
-                        );
-                      },
-                      // Add loading indicator
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return LoadingWidget();
-                      },
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 14,
-                  right: 14,
-                  child: GestureDetector(
-                    onTap: () {
-                      provider.toggleProductLike(product.id);
-                    },
-                    child: Image.asset(
-                      "assets/icons/heart_liked.png",
-                      height: 70,
-                      width: 70,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-              child: Text(
-                product.title,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 15),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: AppColors.secondary,
-                      radius: 16,
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage(
-                          'assets/people/featured1.png',
-                        ),
-                        radius: 14,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'random guy',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.tertiary.withAlpha(190),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

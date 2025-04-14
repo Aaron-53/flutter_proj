@@ -1,9 +1,9 @@
 import 'package:first_proj/constants/constants.dart';
+import 'package:first_proj/widgets/itemcard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
 import '../models/product_model.dart';
-import '../widgets/recipecard.dart';
 
 class RelatedProducts extends StatefulWidget {
   final int currentProductId;
@@ -71,12 +71,16 @@ class _RelatedProductsState extends State<RelatedProducts> {
                     itemCount: _relatedProducts.length,
                     itemBuilder: (context, index) {
                       final product = _relatedProducts[index];
-                      return RecipeCard(
-                        imagePath: product.image,
-                        title: product.title,
-                        calories: '${product.price.toStringAsFixed(2)}',
-                        time: product.category,
-                        id: product.id,
+                      return AspectRatio(
+                        aspectRatio: 5 / 6,
+                        child: ItemCard(
+                          imagePath: product.image,
+                          title: product.title,
+                          details: false,
+                          showLiked: false,
+                          id: product.id,
+                          textLines: 1,
+                        ),
                       );
                     },
                   ),

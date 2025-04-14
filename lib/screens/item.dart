@@ -47,7 +47,6 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   Widget build(BuildContext context) {
     return Consumer<ProductProvider>(
       builder: (context, productProvider, child) {
-        print("loading: ${productProvider.isLoading}");
         if (productProvider.isLoading) {
           return Scaffold(body: Center(child: LoadingWidget()));
         }
@@ -67,7 +66,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 product.image,
                 height: MediaQuery.of(context).size.height * 0.45,
                 width: double.infinity,
-                fit: BoxFit.fill,
+                fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     height: MediaQuery.of(context).size.height * 0.45,
