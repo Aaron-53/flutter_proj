@@ -14,6 +14,8 @@ class ItemCard extends StatefulWidget {
   final bool details;
   final bool showLiked;
   final int textLines; 
+  final double titleSize;
+  final double titleHeight;
 
   const ItemCard({
     super.key,
@@ -27,6 +29,8 @@ class ItemCard extends StatefulWidget {
     this.details = true,
     this.showLiked = true,
     this.textLines = 2,
+    this.titleSize = 18,
+    this.titleHeight = 1.2,
   });
 
   static void placeholder() {}
@@ -69,7 +73,7 @@ class _ItemCardState extends State<ItemCard> {
                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                       child: Image.network(
                         widget.imagePath,
-                        fit: BoxFit.fill, 
+                        fit: BoxFit.contain, 
                         width: double.infinity, 
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
@@ -116,21 +120,23 @@ class _ItemCardState extends State<ItemCard> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title
                   Text(
                     widget.title,
-                    style: const TextStyle(
-                      fontSize: 18,
+                    style: TextStyle(
+                      fontSize: widget.titleSize,
+                      height: widget.titleHeight,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
                     ),
                     maxLines: widget.textLines,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  SizedBox(height: widget.details ? 8 : 0),
                   if (widget.details)
                     widget.author
                         ? Row(

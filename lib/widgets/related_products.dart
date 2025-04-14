@@ -1,5 +1,6 @@
 import 'package:first_proj/constants/constants.dart';
 import 'package:first_proj/widgets/itemcard.dart';
+import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
@@ -62,7 +63,7 @@ class _RelatedProductsState extends State<RelatedProducts> {
             ),
             const SizedBox(height: 10),
             productProvider.isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(child: LoadingWidget())
                 : SizedBox(
                   height: 200,
                   child: ListView.builder(

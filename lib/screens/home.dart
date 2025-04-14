@@ -5,6 +5,7 @@ import 'package:first_proj/widgets/errorHandle.dart';
 import 'package:first_proj/widgets/featuredbox.dart';
 import 'package:first_proj/widgets/itemcard.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
+import 'package:first_proj/widgets/sectiontitle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -159,16 +160,7 @@ class _HomeState extends State<Home> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Featured',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-            ),
-          ),
-        ),
+        SectionTitle(title: 'Featured'),
         const SizedBox(height: 10),
         SizedBox(
           height: 180,
@@ -208,29 +200,7 @@ class _HomeState extends State<Home> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Category',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  Text(
-                    'See All',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.secondary,
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            SectionTitle(title: "Category", actionText: "See All"),
             const SizedBox(height: 10),
             Categories(
               categories: categories,
@@ -251,9 +221,7 @@ class _HomeState extends State<Home> {
         }
 
         if (productProvider.error.isNotEmpty) {
-          return SliverToBoxAdapter(
-            child: ErrorDisplayWidget(),
-          );
+          return SliverToBoxAdapter(child: ErrorDisplayWidget());
         }
 
         final products = productProvider.products;
@@ -268,33 +236,7 @@ class _HomeState extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Popular Recipes',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    Text(
-                      'See All',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.secondary,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              SectionTitle(title: "Popular Recipes", actionText: "See All"),
               const SizedBox(height: 10),
               SizedBox(
                 height: 280,
@@ -305,15 +247,16 @@ class _HomeState extends State<Home> {
                   itemBuilder: (context, index) {
                     final product = products[index];
                     return AspectRatio(
-                      aspectRatio: 5/6,
-                      child:ItemCard(
-                      imagePath: product.image,
-                      title: product.title,
-                      calories: product.price.toStringAsFixed(2),
-                      id: product.id,
-                      liked: product.liked,
-                      toggleLiked: productProvider.toggleProductLike,
-                    ));
+                      aspectRatio: 5 / 6,
+                      child: ItemCard(
+                        imagePath: product.image,
+                        title: product.title,
+                        calories: product.price.toStringAsFixed(2),
+                        id: product.id,
+                        liked: product.liked,
+                        toggleLiked: productProvider.toggleProductLike,
+                      ),
+                    );
                   },
                 ),
               ),

@@ -6,6 +6,7 @@ import 'package:first_proj/widgets/editorschoice.dart';
 import 'package:first_proj/widgets/errorHandle.dart';
 import 'package:first_proj/widgets/itemcard.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
+import 'package:first_proj/widgets/sectiontitle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
@@ -123,29 +124,7 @@ class _SearchState extends State<Search> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Editor\'s Choice',
-                                style: Theme.of(context).textTheme.headlineSmall
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                'View All',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: AppColors.secondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        SectionTitle(title: "Editor\'s Choice", actionText: "View All"),
                         const SizedBox(height: 10),
                       ],
                     ),
@@ -251,28 +230,7 @@ class _SearchState extends State<Search> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Popular Recipes',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'View All',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.secondary,
-                ),
-              ),
-            ],
-          ),
-        ),
+        SectionTitle(title: "Popular Recipes", actionText: "View All"),
         const SizedBox(height: 10),
         SizedBox(
           height: 200,
