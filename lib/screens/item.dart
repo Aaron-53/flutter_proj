@@ -1,4 +1,5 @@
 import 'package:first_proj/main.dart';
+import 'package:first_proj/models/product_model.dart';
 import 'package:first_proj/widgets/errorHandle.dart';
 import 'package:first_proj/widgets/loading_widget.dart';
 import 'package:first_proj/widgets/sectiontitle.dart';
@@ -38,7 +39,6 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (productProvider.currentId != widget.productId) {
-        productProvider.addNestedNav(widget.productId);
         productProvider.fetchProductById(widget.productId);
       }
     });
@@ -52,17 +52,18 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           return Scaffold(body: Center(child: LoadingWidget()));
         }
 
+        final product = productProvider.fetchProductById(widget.productId);
+
         if (productProvider.error.isNotEmpty) {
           return Scaffold(body: ErrorDisplayWidget());
         }
 
-        final product = productProvider.product;
-
         return Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: _buildAppBar(),
+          appBar: _buildAppBar(product),
           body: Stack(
             children: [
+              Positioned.fill(child: Container(color: Colors.white)),
               Image.network(
                 product.image,
                 height: MediaQuery.of(context).size.height * 0.45,
@@ -103,12 +104,12 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                           SizedBox(height: 12),
                           _buildDragHandle(),
                           SizedBox(height: 20),
-                          _buildProductHeader(),
-                          _buildProductInfo(),
+                          _buildProductHeader(product),
+                          _buildProductInfo(product),
                           _buildTabSection(),
                           _selectedTabIndex == 0
                               ? IngredientsList(product: product)
-                              : _buildDetailsSection(),
+                              : _buildDetailsSection(product),
                           _buildAddToCartButton(),
                           _buildCreatorSection(),
                           RelatedProducts(currentProductId: product.id),
@@ -128,12 +129,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
   // UI Component Methods
 
-  PreferredSizeWidget _buildAppBar() {
-    final productProvider = Provider.of<ProductProvider>(
-      context,
-      listen: false,
-    );
-    final product = productProvider.product;
+  PreferredSizeWidget _buildAppBar(Product product) {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -147,22 +143,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           child: IconButton(
             icon: const Icon(Icons.close, color: AppColors.tertiary),
             onPressed: () {
-              int next = productProvider.nextID;
-              if (next == widget.productId) {
-                next = productProvider.nextID;
-              }
-              if (next == -1) {
-                Navigator.pop(context);
-              } else {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RecipeDetailScreen(productId: next),
-                  ),
-                  (Route<dynamic> route) =>
-                      route.isFirst, // This keeps only the first route (home)
-                );
-              }
+              Navigator.pop(context);
             },
           ),
         ),
@@ -207,11 +188,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     );
   }
 
-  Widget _buildProductHeader() {
-    final productProvider = Provider.of<ProductProvider>(
-      context,
-      listen: false,
-    );
+  Widget _buildProductHeader(Product product) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -222,7 +199,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             children: [
               Expanded(
                 child: Text(
-                  productProvider.product.title,
+                  product.title,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -250,13 +227,12 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               children: [
                 TextSpan(
                   text:
-                      !_expandedDescription &&
-                              productProvider.product.description.length > 100
-                          ? '${productProvider.product.description.substring(0, 100)}... '
-                          : productProvider.product.description,
+                      !_expandedDescription && product.description.length > 100
+                          ? '${product.description.substring(0, 100)}... '
+                          : product.description,
                   style: TextStyle(fontSize: 16, color: AppColors.tertiary),
                 ),
-                if (productProvider.product.description.length > 100)
+                if (product.description.length > 100)
                   WidgetSpan(
                     alignment: PlaceholderAlignment.baseline,
                     baseline: TextBaseline.alphabetic,
@@ -285,11 +261,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     );
   }
 
-  Widget _buildProductInfo() {
-    final productProvider = Provider.of<ProductProvider>(
-      context,
-      listen: false,
-    );
+  Widget _buildProductInfo(Product product) {
     final nutritionItems = [
       {'icon': "assets\\icons\\Carbs.png", 'value': '55g', 'label': 'carbs'},
       {
@@ -299,12 +271,12 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       },
       {
         'icon': "assets\\icons\\Calories.png",
-        'value': '\$${productProvider.product.price.toStringAsFixed(2)}',
+        'value': '\$${product.price.toStringAsFixed(2)}',
         'label': 'price',
       },
       {
         'icon': "assets\\icons\\Fats.png",
-        'value': productProvider.product.category,
+        'value': product.category,
         'label': 'category',
       },
     ];
@@ -449,11 +421,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     );
   }
 
-  Widget _buildDetailsSection() {
-    final productProvider = Provider.of<ProductProvider>(
-      context,
-      listen: false,
-    );
+  Widget _buildDetailsSection(Product product) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -468,14 +436,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          _buildDetailItem('ID', productProvider.product.id.toString()),
-          _buildDetailItem('Title', productProvider.product.title),
-          _buildDetailItem(
-            'Price',
-            '\$${productProvider.product.price.toStringAsFixed(2)}',
-          ),
-          _buildDetailItem('Category', productProvider.product.category),
-          _buildDetailItem('Description', productProvider.product.description),
+          _buildDetailItem('ID', product.id.toString()),
+          _buildDetailItem('Title', product.title),
+          _buildDetailItem('Price', '\$${product.price.toStringAsFixed(2)}'),
+          _buildDetailItem('Category', product.category),
+          _buildDetailItem('Description', product.description),
         ],
       ),
     );
@@ -531,7 +496,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SectionTitle(title: "Creator", padding: 0,),
+          SectionTitle(title: "Creator", padding: 0),
           const SizedBox(height: 12),
           Row(
             children: [

@@ -22,13 +22,11 @@ class _RelatedProductsState extends State<RelatedProducts> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final productProvider = Provider.of<ProductProvider>(
-        context,
-        listen: false,
-      );
-      productProvider.fetchRelatedProducts(widget.currentProductId);
-    });
+    final productProvider = Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    );
+    productProvider.fetchRelatedProducts(widget.currentProductId);
   }
 
   @override

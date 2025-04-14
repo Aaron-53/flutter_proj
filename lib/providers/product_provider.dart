@@ -35,7 +35,6 @@ class ProductProvider extends ChangeNotifier {
   String get error => _error;
   int get nextID => nestedNav.isNotEmpty ? nestedNav.removeLast() : -1;
 
-
   Future<void> fetchProducts() async {
     _isLoading = true;
     _error = '';
@@ -65,34 +64,21 @@ class ProductProvider extends ChangeNotifier {
     }
   }
 
-  Future<Product?> fetchProductById(int id) async {
-    _isLoading = true;
-    _error = '';
-    notifyListeners();
+  Product fetchProductById(int id) {
+    if (_product.id == id) return _product;
+    fetchRelatedProducts(id);
+    _product = products.firstWhere((product) => product.id == id);
 
-    try {
-      _product = await _apiService.getProduct(id);
-
-      // Update liked status for this product
-      _product = Product(
-        id: _product.id,
-        title: _product.title,
-        price: _product.price,
-        description: _product.description,
-        category: _product.category,
-        image: _product.image,
-        liked: _likedProductIds.contains(_product.id),
-      );
-
-      _isLoading = false;
-      notifyListeners();
-      return _product;
-    } catch (e) {
-      _isLoading = false;
-      _error = e.toString();
-      notifyListeners();
-      return null;
-    }
+    _product = Product(
+      id: _product.id,
+      title: _product.title,
+      price: _product.price,
+      description: _product.description,
+      category: _product.category,
+      image: _product.image,
+      liked: _likedProductIds.contains(_product.id),
+    );
+    return _product;
   }
 
   Future<void> fetchProductsByCategory(String category) async {
@@ -126,7 +112,7 @@ class ProductProvider extends ChangeNotifier {
   }
 
   Future<void> fetchCategories() async {
-    if (_categories.isNotEmpty) return; 
+    if (_categories.isNotEmpty) return;
 
     _isCatLoading = true;
     _error = '';
@@ -150,11 +136,8 @@ class ProductProvider extends ChangeNotifier {
   Future<void> fetchRelatedProducts(int id) async {
     if (currentId != id) {
       _error = '';
-      notifyListeners();
       currentId = id;
       try {
-        _products = await _apiService.getProducts();
-
         // Update liked status based on our stored IDs
         for (var i = 0; i < _products.length; i++) {
           _products[i] = Product(
@@ -169,10 +152,8 @@ class ProductProvider extends ChangeNotifier {
         }
         _relatedProducts =
             _products.where((product) => product.id != id).take(5).toList();
-        notifyListeners();
       } catch (e) {
         _error = e.toString();
-        notifyListeners();
       }
     }
   }
