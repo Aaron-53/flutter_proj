@@ -36,7 +36,6 @@ class ProductProvider extends ChangeNotifier {
   int get nextID => nestedNav.isNotEmpty ? nestedNav.removeLast() : -1;
 
   Future<void> fetchProducts() async {
-    print('Fetching products...');
     _isLoading = true;
     _error = '';
     notifyListeners();
@@ -57,7 +56,6 @@ class ProductProvider extends ChangeNotifier {
         );
       }
       _isLoading = false;
-      print('Products fetched successfully!');
       notifyListeners();
     } catch (e) {
       _isLoading = false;
