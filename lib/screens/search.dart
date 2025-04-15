@@ -208,7 +208,7 @@ class _SearchState extends State<Search> {
         }
 
         if (productProvider.error.isNotEmpty) {
-          return Center(child: Text('Error: ${productProvider.error}'));
+          return ErrorDisplayWidget();
         }
 
         return Column(
