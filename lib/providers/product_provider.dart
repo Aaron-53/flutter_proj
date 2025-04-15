@@ -9,7 +9,6 @@ class ProductProvider extends ChangeNotifier {
   List<String> _categories = [];
   List<Product> _relatedProducts = [];
   int currentId = -1;
-  List<int> nestedNav = [];
 
   // Simple list to store liked product IDs
   final List<int> _likedProductIds = [];
@@ -33,7 +32,6 @@ class ProductProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isCatLoading => _isCatLoading;
   String get error => _error;
-  int get nextID => nestedNav.isNotEmpty ? nestedNav.removeLast() : -1;
 
   Future<void> fetchProducts() async {
     _isLoading = true;
@@ -158,9 +156,6 @@ class ProductProvider extends ChangeNotifier {
     }
   }
 
-  void addNestedNav(int id) {
-    nestedNav.add(id);
-  }
 
   void toggleProductLike(int productId) {
     // Toggle in the liked IDs list
